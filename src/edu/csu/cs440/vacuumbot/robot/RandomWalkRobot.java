@@ -11,7 +11,7 @@ public class RandomWalkRobot extends Robot {
 	@Override
 	public void updatePositionAndClean() {
 		setDireciton(getRandomDirection());
-		while (getRoom().isPositionInRoom(getPosition().getNewPosition(getDirection(), getSpeed()))) {
+		while (!getRoom().isPositionInRoom(getPosition().getNewPosition(getDirection(), getSpeed()))) {
 			setDireciton(getRandomDirection());
 		}
 		setPosition(getPosition().getNewPosition(getDirection(), getSpeed()));

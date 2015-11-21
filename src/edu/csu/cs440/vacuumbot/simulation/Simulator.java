@@ -53,7 +53,8 @@ public class Simulator {
 	}
 
 	public static void main(String[] args) {
-		new Simulator(2, 100, 1000, 1000, 4, 5, RobotType.RANDOM_WALK);
+		Simulator simulator = new Simulator(2, 100, 50, 50, 4, 5, RobotType.STANDARD);
+		System.out.println(simulator.runSimulation());
 
 	}
 }
