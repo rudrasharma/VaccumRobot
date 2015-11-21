@@ -1,2 +1,15 @@
 /bin/
 /target/
+.idea
+out
+VaccumRobot.iml
+.DS_Store
+report.aux
+report.bbl
+report.blg
+report.fdb_latexmk
+report.log
+report.synctex.gz
+/.classpath
+/.project
+/.settings/
