@@ -1,0 +1,149 @@
+\documentclass[letterpaper]{article}
+\usepackage{aaai}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\RequirePackage{booktabs}
+\setlength{\pdfpagewidth}{8.5in} 
+\setlength{\pdfpageheight}{11in}
+
+
+\setcounter{secnumdepth}{0}
+
+\title{AI project}
+\author{Rudra Sharma \and Joshua O'Dell \\ Colorado State University \\ Fort Collins, CO 80523 }
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The purpose of this project is to simulate an automated vacuum cleaner (AUC). We will represent a room as a 2D plane which has clean and dirty points/tiles. There will also be obstacles in the room such as furniture which would obstruct paths for a vacuum. The goal of the vacuum cleaner is to clear all the dirty points/tiles and navigate/find a path around the obstacles in the room.
+
+In the project we will implement a variety of different vacuums and study its impact on performance. There have been several papers written on the study of automated vacuum cleaners. IRobot’s Roomba is an example of such a robot, we will study this implementation when developing our own algorithms.
+
+\section{Experiment Implementation}
+
+The project implemented 6 distinct vacuum robots. Each Robot has a different set of percepts, and the algorithm is adjusted to deal with it.
+
+The following is a list of the capabilities of each Vacuum robot.
+\begin{enumerate}  
+\item \textbf{Preloaded Map:} Before the cleaning begins a map of the world is loaded into each the vacuum robot.
+\item \textbf{Store explored nodes:} As the vacuum robot moves through the world it is allowed to store with infinite storage the tiles where it has been and the status of that tile
+\item \textbf{Dirt Sensor:} A vacuum is allowed to sense the status of the tile that it is currently on.
+% are we going to allow it to sense neighbors?
+\item \textbf{Proximity Sensor:} the vacuum robot has the ability to know when it is close to a wall.
+% assume direct neighbor, but possibly farther?
+\end{enumerate}  
+
+
+\subsection{Program 1}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& Yes \\
+	Store explored nodes	& Yes \\
+	Dirt Sensor				& Yes \\
+	Proximity Sensor		& No \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\subsection{Program 2}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& Yes \\
+	Store explored nodes	& No \\
+	Dirt Sensor				& Yes \\
+	Proximity Sensor		& No \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\subsection{Program 3}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& Yes \\
+	Store explored nodes	& Yes \\
+	Dirt Sensor				& No \\
+	Proximity Sensor		& Yes \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\subsection{Program 4}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& No \\
+	Store explored nodes	& No \\
+	Dirt Sensor				& Yes \\
+	Proximity Sensor		& Yes \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\subsection{Program 5}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& Yes \\
+	Store explored nodes	& Yes \\
+	Dirt Sensor				& No \\
+	Proximity Sensor		& No \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\subsection{Program 6}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& No \\
+	Store explored nodes	& No \\
+	Dirt Sensor				& Yes \\
+	Proximity Sensor		& No \\
+\end{tabular}
+
+This program was implemented by making an algorithm...
+
+We discovered that this program did something...
+
+
+\section{Results}
+
+We found the following.
+
+\begin{tabular}{ r | l }  
+	\toprule
+		& avg \% cleaned \\
+	\midrule
+	P1	& 15 \\
+	P2	& 45 \\
+	P3	& 84 \\
+	P4	& 56 \\
+	P5	& 77 \\
+	P6	& 1 \\
+	\bottomrule
+\end{tabular}
+
+\section{Conclusion}
+
+% \cite[p. 2] {Optimized_Path_Planning}
+
+\nocite{*}
+\bibliography{report}
+\bibliographystyle{aaai}
+\end{document}
+
+
