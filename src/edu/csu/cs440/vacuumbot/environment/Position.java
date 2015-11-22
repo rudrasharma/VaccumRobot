@@ -23,8 +23,8 @@ public class Position {
 		double oldY = this.y;
 
 		// TODO: Verify Math.toRadians is equals to math.radians in python
-		double deltaY = Math.cos(Math.toRadians(angle));
-		double deltaX = Math.sin(Math.toRadians(angle));
+		double deltaY = speed * Math.cos(Math.toRadians(angle));
+		double deltaX = speed * Math.sin(Math.toRadians(angle));
 
 		double newX = oldX + deltaY;
 		double newY = oldY + deltaX;
@@ -70,4 +70,11 @@ public class Position {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Position{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
 }
