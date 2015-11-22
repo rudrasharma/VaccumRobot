@@ -60,4 +60,14 @@ public abstract class Robot {
 	protected int getRandomDirection() {
 		return (int) (Math.random() * MAX_ANGLE_RANGE);
 	}
+
+	@Override
+	public String toString() {
+		return "Robot{" +
+				"direction=" + direction +
+				", room=" + room +
+				", speed=" + speed +
+				", position=" + position +
+				'}';
+	}
 }
