@@ -12,6 +12,7 @@ public class StandardRobot extends Robot {
 	public void updatePositionAndClean() {
 		if (getRoom().isPositionInRoom(getPosition().getNewPosition(getDirection(), getSpeed()))) {
 			setPosition(getPosition().getNewPosition(getDirection(), getSpeed()));
+			getRoom().cleanTileAtPosition(getPosition());
 		} else {
 			setDireciton(getRandomDirection());
 		}
