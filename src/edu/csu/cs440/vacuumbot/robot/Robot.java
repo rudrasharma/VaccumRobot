@@ -23,7 +23,9 @@ public abstract class Robot {
 		} else {
 			throw new IllegalArgumentException("Speed cannot be less then 0");
 		}
-		position = new Position(room.getWidth() * random.nextDouble(), room.getHeight() * random.nextDouble());
+		int x = (int)(room.getWidth() * random.nextDouble());
+		int y = (int)(room.getHeight() * random.nextDouble());
+		position = new Position(x,y);
 
 	}
 

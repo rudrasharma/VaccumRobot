@@ -13,6 +13,7 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.screen.VirtualScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 import edu.csu.cs440.vacuumbot.environment.Position;
 import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 import edu.csu.cs440.vacuumbot.robot.Robot;
@@ -28,7 +29,8 @@ public class Simulator {
 	private final int numTrials;
 	private final RobotType type;
 	private Terminal terminal;
-//	private Screen screen;
+//	private SwingTerminal swingTerminal;
+	private Screen screen;
 	private VirtualScreen virtualScreen;
 
 	public Simulator(int numRobots, double speed, int width, int height, double minCoverage, int numTrials,
@@ -40,10 +42,12 @@ public class Simulator {
 		this.minCoverage = minCoverage;
 		this.numTrials = numTrials;
 		this.type = type;
+//		swingTerminal = new SwingTerminal();
 		terminal = new DefaultTerminalFactory().createTerminal();
 		Screen screen = new TerminalScreen(terminal);
 		virtualScreen = new VirtualScreen(screen);
 		virtualScreen.startScreen();
+		virtualScreen.setMinimumSize(new TerminalSize(width,height));
 		virtualScreen.clear();
 	}
 
@@ -51,7 +55,7 @@ public class Simulator {
 		int totalTime = 0;
 		int num = numTrials;
 		TextGraphics tGraphics = virtualScreen.newTextGraphics();
-		tGraphics.drawRectangle(new TerminalPosition(0,0), new TerminalSize(width,height), '*');
+		tGraphics.drawRectangle(new TerminalPosition(0,0), new TerminalSize(width,height), '+');
 		while (num > 0) {
 			RectangularRoom room = new RectangularRoom(width, height);
 			int i = numRobots;
@@ -64,13 +68,17 @@ public class Simulator {
 				for (Robot robot : robots) {
 					Position p = robot.getPosition();
 					robot.updatePositionAndClean();
+//					if (robot.getPosition().getY() < 0 || robot.getPosition().getY() > room.getHeight() ||
+//							robot.getPosition().getX() < 0 || robot.getPosition().getX() > room.getWidth()){
+//						robot.setPosition(p);
+//					}
 //					System.out.println(robot.getPosition().toString());
-					if (robot.getPosition().getX() < width &&
-							robot.getPosition().getY() < height){
-						virtualScreen.setCharacter((int)(robot.getPosition().getX()),
-								(int)(robot.getPosition().getY()),
-								new TextCharacter('*'));
-					}
+					virtualScreen.setCharacter((int)(robot.getPosition().getX()),
+							(int)(robot.getPosition().getY()),
+							new TextCharacter('*'));
+					tGraphics.putString(2, height+1,
+							robot.getPosition().toString() + "\t Complete %" +
+									((double)room.getNumCleanedTiles() / room.getNumTiles()) * 100);
 					virtualScreen.refresh();
 				}
 				totalTime += 1;
@@ -82,7 +90,7 @@ public class Simulator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Simulator simulator = new Simulator(1, 100, 50, 50, 1, 1, RobotType.STANDARD);
+		Simulator simulator = new Simulator(1, 2, 80, 20, 0.40, 1, RobotType.STANDARD);
 		System.out.println(simulator.runSimulation());
 
 	}

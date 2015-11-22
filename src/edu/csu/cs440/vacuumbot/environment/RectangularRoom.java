@@ -17,8 +17,8 @@ public class RectangularRoom {
 	}
 
 	public void cleanTileAtPosition(Position position) {
-		double x = Math.floor(position.getX());
-		double y = Math.floor(position.getY());
+		int x = (int)Math.floor(position.getX());
+		int y = (int)Math.floor(position.getY());
 		Position roundedPosition = new Position(x, y);
 		if (!cleaned.contains(roundedPosition)) {
 			cleaned.add(position);
@@ -31,13 +31,13 @@ public class RectangularRoom {
 
 	public Position getRandomPosition() {
 		Random random = new Random();
-		double randomX = width * random.nextDouble();
-		double randomY = height * random.nextDouble();
+		int randomX = width * random.nextInt();
+		int randomY = height * random.nextInt();
 		return new Position(randomX, randomY);
 	}
 
 	public boolean isPositionInRoom(Position position) {
-		return 0 <= position.getX() && position.getX() < this.width && 0 <= position.getX()
+		return 0 <= position.getX() && position.getX() < this.width && 0 <= position.getY()
 				&& position.getY() < this.height;
 	}
 

@@ -2,19 +2,19 @@ package edu.csu.cs440.vacuumbot.environment;
 
 public class Position {
 
-	private final double x;
-	private final double y;
+	private final int x;
+	private final int y;
 
-	public Position(double x, double y) {
+	public Position(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public double getX() {
+	public int getX() {
 		return x;
 	}
 
-	public double getY() {
+	public int getY() {
 		return y;
 	}
 
@@ -23,11 +23,11 @@ public class Position {
 		double oldY = this.y;
 
 		// TODO: Verify Math.toRadians is equals to math.radians in python
-		double deltaY = Math.cos(Math.toRadians(angle));
-		double deltaX = Math.sin(Math.toRadians(angle));
+		double deltaY = (Math.cos(Math.toRadians(angle))) * speed;
+		double deltaX = (Math.sin(Math.toRadians(angle))) * speed;
 
-		double newX = oldX + deltaY;
-		double newY = oldY + deltaX;
+		int newX = (int)(oldX + deltaY);
+		int newY = (int)(oldY + deltaX);
 
 		return new Position(newX, newY);
 	}
