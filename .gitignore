@@ -13,3 +13,5 @@ report.synctex.gz
 /.classpath
 /.project
 /.settings/
+.metadata
+RemoteSystemsTempFiles
