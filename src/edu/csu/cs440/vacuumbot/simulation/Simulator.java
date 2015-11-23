@@ -85,6 +85,8 @@ public class Simulator {
 			}
 			num -= 1;
 		}
+		virtualScreen.readInput();
+		virtualScreen.stopScreen();
 
 		return totalTime / numTrials;
 	}
