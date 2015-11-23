@@ -90,7 +90,7 @@ public class Simulator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Simulator simulator = new Simulator(1, 2, 80, 20, 0.40, 1, RobotType.STANDARD);
+		Simulator simulator = new Simulator(1, 3, 20, 20, 1, 1, RobotType.STANDARD);
 		System.out.println(simulator.runSimulation());
 
 	}

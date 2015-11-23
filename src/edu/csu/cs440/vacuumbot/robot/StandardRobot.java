@@ -10,7 +10,7 @@ public class StandardRobot extends Robot {
 
 	@Override
 	public void updatePositionAndClean() {
-		if (getRoom().isPositionInRoom(getPosition().getNewPosition(getDirection(), getSpeed()))) {
+		if (getRoom().isCleanable(getPosition().getNewPosition(getDirection(), getSpeed()))) {
 			setPosition(getPosition().getNewPosition(getDirection(), getSpeed()));
 			getRoom().cleanTileAtPosition(getPosition());
 		} else {
