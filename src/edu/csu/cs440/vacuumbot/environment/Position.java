@@ -33,7 +33,6 @@ public class Position {
 	}
 
 
-
 	/* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
@@ -66,7 +65,7 @@ public class Position {
     }
 
     @Override
-	public String toString() {
+    public String toString() {
 		return "Position{" +
 				"x=" + x +
 				", y=" + y +

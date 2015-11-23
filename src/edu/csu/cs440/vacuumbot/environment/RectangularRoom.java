@@ -26,6 +26,7 @@ public class RectangularRoom {
 	public void cleanTileAtPosition(Position position) {
 		int x = position.getX();
 		int y = position.getY();
+
 		Position roundedPosition = new Position(x, y);
 		if (!cleaned.contains(roundedPosition)) {
 			cleaned.add(position);
@@ -48,7 +49,8 @@ public class RectangularRoom {
 	            !obstructedAreas.contains(position);
 	}
 	
-	private boolean isPositionInRoom(Position position) {
+
+	public boolean isPositionInRoom(Position position) {
 		return 0 <= position.getX() && position.getX() < this.width && 0 <= position.getY()
 				&& position.getY() < this.height;
 	}
