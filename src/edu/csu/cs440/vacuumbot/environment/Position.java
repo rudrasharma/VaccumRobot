@@ -64,6 +64,10 @@ public class Position {
         return true;
     }
 
+	public double distanceFrom(Position p){
+		return Math.abs(p.getX() - this.getX()) + Math.abs(p.getY() - this.getY());
+	}
+
     @Override
     public String toString() {
 		return "Position{" +
