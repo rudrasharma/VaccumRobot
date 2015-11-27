@@ -1,5 +1,7 @@
 package edu.csu.cs440.vacuumbot.robot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import edu.csu.cs440.vacuumbot.environment.Position;
@@ -61,6 +63,24 @@ public abstract class Robot {
 
 	protected int getRandomDirection() {
 		return (int) (Math.random() * MAX_ANGLE_RANGE);
+	}
+
+	protected List<Position> getAvailablePositions(Position p){
+		ArrayList<Position> returning = new ArrayList<>();
+
+		//  0   3   5
+		//  1       6
+		//  2   4   7
+		returning.add(new Position(p.getX() - 1, p.getY() - 1));
+		returning.add(new Position(p.getX() - 1, p.getY() - 0));
+		returning.add(new Position(p.getX() - 1, p.getY() + 1));
+		returning.add(new Position(p.getX() - 0, p.getY() - 1));
+		returning.add(new Position(p.getX() - 0, p.getY() + 1));
+		returning.add(new Position(p.getX() + 1, p.getY() - 1));
+		returning.add(new Position(p.getX() + 1, p.getY() - 0));
+		returning.add(new Position(p.getX() + 1, p.getY() + 1));
+
+		return returning;
 	}
 
 	@Override
