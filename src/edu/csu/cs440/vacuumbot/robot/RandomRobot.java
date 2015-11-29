@@ -17,11 +17,14 @@ public class RandomRobot extends Robot{
 
     @Override
     public void updatePositionAndClean() {
-        List<Position> availablePositions = getAvailablePositions(getPosition());
+        Position current = getPosition();
+        if(getRoom().isCleanable(current)) {
+            getRoom().cleanTileAtPosition(current);
+        }
+        List<Position> availablePositions = getAvailablePositions(current);
         int randomNextIndex = randomGenerator.nextInt(availablePositions.size());
         Position randomNext = availablePositions.get(randomNextIndex);
         setPosition(randomNext);
-        
     }
 
 }
