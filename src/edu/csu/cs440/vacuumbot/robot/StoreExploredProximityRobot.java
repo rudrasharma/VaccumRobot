@@ -1,6 +1,5 @@
 package edu.csu.cs440.vacuumbot.robot;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.csu.cs440.vacuumbot.environment.Position;
 import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 

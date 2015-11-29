@@ -4,7 +4,6 @@ import edu.csu.cs440.vacuumbot.environment.Position;
 import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
