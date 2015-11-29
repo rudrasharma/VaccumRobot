@@ -97,7 +97,7 @@ public class Simulator {
         int[] depths = {100,1000,10000,100000,1000000};
         for (int d : depths){
             try {
-                Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.STANDARD);
+                Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.STORE_MAP_ROBOT);
                 System.out.println(simulator.runSimulation());
             } catch (IOException e) {
                 e.printStackTrace();
