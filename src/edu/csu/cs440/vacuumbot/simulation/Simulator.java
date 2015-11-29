@@ -22,7 +22,6 @@ import edu.csu.cs440.vacuumbot.environment.Position;
 import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 import edu.csu.cs440.vacuumbot.robot.Robot;
 import edu.csu.cs440.vacuumbot.robot.RobotType;
-import sun.jvm.hotspot.utilities.WorkerThread;
 
 public class Simulator {
 
