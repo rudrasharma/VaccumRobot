@@ -43,7 +43,6 @@ public class StoreMapRobot extends Robot {
             randomNextIndex = randomGenerator.nextInt(availablePositions.size());
             randomNext = availablePositions.get(randomNextIndex);
         }
-        
         setPosition(randomNext);
     }
 
