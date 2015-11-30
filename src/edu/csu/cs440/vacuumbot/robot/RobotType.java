@@ -3,7 +3,7 @@ package edu.csu.cs440.vacuumbot.robot;
 import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 
 public enum RobotType {
-	STANDARD, RANDOM_WALK, STORE_EXPLORED, STORE_EXPLORED_PROXIMITY, STORE_MAP_ROBOT, RANDOM_ROBOT;
+	STANDARD, RANDOM_WALK, STORE_EXPLORED, STORE_EXPLORED_PROXIMITY, STORE_MAP_ROBOT, RANDOM_ROBOT, STORE_EXPLORED_NODES_AND_MAP;
 	
 	public Robot getRobot(RectangularRoom room, double speed){
 		if(this == RANDOM_WALK) {
@@ -16,6 +16,8 @@ public enum RobotType {
 		    return new StoreMapRobot(room, speed);
 		}else if(this == RANDOM_ROBOT) {
             return new RandomRobot(room, speed);
+        }else if(this == STORE_EXPLORED_NODES_AND_MAP) {
+            return new StoreExploredMap(room, speed);
         }else {
 			return new StandardRobot(room, speed);
 		}
