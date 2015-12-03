@@ -33,17 +33,21 @@ public class StoreExploredProximityRobot extends Robot {
     public StoreExploredProximityRobot(RectangularRoom room, double speed) {
         super(room, speed);
     }
+    boolean lookingForEdge = true;
 
     @Override
     public void updatePositionAndClean() {
         Position p = getPosition();
+        if (closeToEdge(p) == 0){
+            //lookingForEdge = false;
+        }
 
         if (explored.size() > 1 && explored.get(explored.size()-1) == p){
             //  if the last node is the same as our current then we had no move last time
             //  which means we're stuck, and should randomly choose a direction
             int index = (int) (Math.random() * 8);
             Position newPosition = getAvailablePositions(p).get(index);
-            if (getRoom().isCleanable(newPosition)) {
+            if (getRoom().isPositionInRoom(newPosition)) {
                 setPosition(newPosition);
                 getRoom().cleanTileAtPosition(getPosition());
             }
@@ -52,52 +56,65 @@ public class StoreExploredProximityRobot extends Robot {
             ArrayList<PriorityPosition> positions = new ArrayList<>();
             for (Position possible: getAvailablePositions(p)) {
                 double priority = 0;
+                int i = 0;
                 for (Position existing: explored) {
-                    double d = existing.distanceFrom(possible);
-                    // if it's the same place we don't want it if we can avoid it.
-                    priority += d == 0 ? explored.size() : d;
+                    if (i % 3 == 0) {
+                        double d = existing.distanceFrom(possible);
+                        // if it's the same place we don't want it if we can avoid it.
+                        priority += d == 0 ? explored.size() : d;
+                    }
+                    i++;
                 }
-                priority += closeToEdge(possible);
+                priority += lookingForEdge ? closeToEdge(possible) * proximitySensitivity : 0;
                 positions.add(new PriorityPosition(priority, possible));
             }
             positions.sort((o1, o2) -> Double.compare(o1.priority, o2.priority));
-            Position newPosition = positions.get(0).position;
 
-            if (getRoom().isCleanable(newPosition)) {
-                setPosition(newPosition);
-                getRoom().cleanTileAtPosition(getPosition());
+            for (int i = 0; i < positions.size(); i++){
+                Position newPosition = positions.get(i).position;
+                if (getRoom().isPositionInRoom(newPosition)) {
+                    setPosition(newPosition);
+                    getRoom().cleanTileAtPosition(getPosition());
+                    return;
+                }
             }
+            System.out.println("could not find a move");
         }
     }
-    static int proximitySensitivity = 1000;
+    static int proximitySensitivity = 20;
+    // 0 is the closes to edge
     double closeToEdge(Position p){
         if (p.getX() < getRoom().getWidth() / 2){
             int dx = p.getX();
             if (p.getY() < getRoom().getHeight() / 2){
+                //  top left
                 int dy = p.getY();
                 if (p.getX() < proximitySensitivity || p.getY() < proximitySensitivity){
-                    return Math.max(dx,dy);
+                    return (dx + dy) / 2.0;
                 }
             }else{
+                // bottom left
                 int dy = (getRoom().getHeight() - p.getY());
                 if (p.getX() < proximitySensitivity || (getRoom().getHeight() - p.getY()) > proximitySensitivity){
-                    return Math.max(dx,dy);
+                    return (dx + dy) / 2.0;
                 }
             }
         }else{
             int dx = (getRoom().getWidth() - p.getX());
             if (p.getY() < getRoom().getHeight() / 2){
+                // top right
                 int dy = p.getY();
                 if (p.getX() < proximitySensitivity || p.getY() < proximitySensitivity){
-                    return Math.max(dx,dy);
+                    return (dx + dy) / 2.0;
                 }
             }else{
+                // bottom right
                 int dy = (getRoom().getHeight() - p.getY());
                 if (p.getX() < proximitySensitivity || (getRoom().getHeight() - p.getY()) > proximitySensitivity){
-                    return Math.max(dx,dy);
+                    return (dx + dy) / 2.0;
                 }
             }
         }
-        return 0;
+        return proximitySensitivity;
     }
 }
