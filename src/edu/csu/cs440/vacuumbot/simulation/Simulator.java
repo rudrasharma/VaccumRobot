@@ -138,8 +138,8 @@ public class Simulator {
         virtualScreen.clear();
         TextGraphics tGraphics = virtualScreen.newTextGraphics();
 //        tGraphics.drawRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), getAscii(175));
-        double[] completionThreadholds = {0.10, 0.50, 0.80, 1.0};
-        int[] depths = {100,1000,10000,100000,1000000};
+        double[] completionThreadholds = {0.10, 0.20, 0.50, 0.80, 1.0};
+        int[] depths = {1000000};
 
         String headingString = String.format("%30s", "Robot Type");
         for (double t : completionThreadholds){
@@ -152,16 +152,28 @@ public class Simulator {
         for(double threashold : completionThreadholds){
             for (int d : depths){
                 for (RobotType robotType : RobotType.values()){
-                    tGraphics.putString(0,(robotType.ordinal()*2)+2, String.format("%30s", robotType.toString()));
+                    tGraphics.putString(0,(robotType.ordinal()*3)+2, String.format("%30s", robotType.toString()));
                     try {
-                        Simulator simulator = new Simulator(2, width, height, d, threashold, robotType, false);
-                        int res = simulator.runSimulation();
-                        System.out.println(simulator.toString());
-                        simulations.add(simulator);
+                        int totalDepths = 0;
+                        double totalPercentages = 0;
+                        int successes = 0;
 
-                        tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*2)+2, String.format("%8d", res));
-                        tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*2)+3, String.format("%7.1f%%", simulator.getPercentCleaned()*100));
-                        virtualScreen.refresh();
+                        for (int i = 1; i <= 100; i++){
+                            Simulator simulator = new Simulator(2, width, height, d, threashold, robotType, false);
+                            totalDepths += simulator.runSimulation();
+                            totalPercentages += simulator.getPercentCleaned();
+                            if (simulator.getPercentCleaned() >= threashold){
+                                successes++;
+                            }
+                            System.out.println(simulator.toString());
+                            simulations.add(simulator);
+                            tGraphics.putString(0,(RobotType.values().length*3)+2, simulator.toString());
+
+                            tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*3)+2, String.format("%8d", totalDepths / i));
+                            tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*3)+3, String.format("%7.1f%%", (totalPercentages/i)*100));
+                            tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*3)+4, String.format(" %3d/%3d", successes, i));
+                            virtualScreen.refresh();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
