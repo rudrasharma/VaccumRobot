@@ -26,86 +26,154 @@ public class Simulator {
     private final int maxDepth;
     private final double threashold;
     private final RobotType type;
+    RectangularRoom room;
+    int totalTime = 0;
+    Robot robot;
+
     private Terminal terminal;
-    //	private SwingTerminal swingTerminal;
     private Screen screen;
     private VirtualScreen virtualScreen;
+    TextGraphics tGraphics;
 
     public Simulator(double speed, int width, int height, int maxDepth, double threashold,
-                     RobotType type) throws IOException {
+                     RobotType type, boolean showUI) throws IOException {
         this.speed = speed;
         this.width = width;
         this.height = height;
         this.maxDepth = maxDepth;
         this.threashold = threashold;
         this.type = type;
-//		swingTerminal = new SwingTerminal();
-        terminal = new DefaultTerminalFactory().createTerminal();
-        Screen screen = new TerminalScreen(terminal);
-        virtualScreen = new VirtualScreen(screen);
-        virtualScreen.startScreen();
-        virtualScreen.setMinimumSize(new TerminalSize(width,height));
-        virtualScreen.clear();
+        room = new RectangularRoom(width, height);
+        robot = type.getRobot(room, speed);
+        if (showUI) {
+            terminal = new DefaultTerminalFactory().createTerminal();
+            Screen screen = new TerminalScreen(terminal);
+            virtualScreen = new VirtualScreen(screen);
+            virtualScreen.startScreen();
+            virtualScreen.setMinimumSize(new TerminalSize(width, height));
+            virtualScreen.clear();
+            tGraphics = virtualScreen.newTextGraphics();
+            tGraphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), getAscii(175));
+        }
     }
 
     public int runSimulation() throws IOException {
-        int totalTime = 0;
-        TextGraphics tGraphics = virtualScreen.newTextGraphics();
-        tGraphics.fillRectangle(new TerminalPosition(0,0), new TerminalSize(width,height), getAscii(175));
-
-        RectangularRoom room = new RectangularRoom(width, height);
-        Set<Robot> robots = new HashSet<>();
-        robots.add(type.getRobot(room, speed));
-
-        while (totalTime < this.maxDepth &&
-                (room.getNumTiles() * this.threashold) > room.getNumCleanedTiles()) {
-            for (Robot robot : robots) {
-                Position p = robot.getPosition();
-                robot.updatePositionAndClean();
-//					System.out.println(robot.getPosition().toString());
-                virtualScreen.setCharacter(robot.getPosition().getX(),
-                        robot.getPosition().getY(),
-                        new TextCharacter(getAscii(218)));
-                if(totalTime % (this.maxDepth / 100) == 0) {
-                    // only update UI every so often
-                    String str = String.format("%s \t Complete %.2f \t depth %6d / %6d",
-                            robot.getPosition().toString(),
-                            ((double) room.getNumCleanedTiles() / room.getNumTiles()) * 100,
-                            totalTime, this.maxDepth);
+        while (totalTime < this.maxDepth && (room.getNumTiles() * this.threashold) > room.getNumCleanedTiles()) {
+            Position p = robot.getPosition();
+            robot.updatePositionAndClean();
+            if (virtualScreen != null)
+                virtualScreen.setCharacter(robot.getPosition().getX(), robot.getPosition().getY(), new TextCharacter(getAscii(218)));
+            if(totalTime % (this.maxDepth / 100) == 0) {
+                // only update UI every so often
+                String str = String.format("%s \t Complete %.2f \t depth %6d / %6d", robot.getPosition().toString(), ((double) room.getNumCleanedTiles() / room.getNumTiles()) * 100, totalTime, this.maxDepth);
+                if (tGraphics != null)
                     tGraphics.putString(2, height + 1, str);
+                if (virtualScreen != null)
                     virtualScreen.refresh();
-                }
             }
             totalTime += 1;
         }
-        for (Robot robot : robots) {
-            String str = String.format("%s \t Complete %.2f \t depth %6d / %6d",
-                    robot.getPosition().toString(),
-                    ((double) room.getNumCleanedTiles() / room.getNumTiles()) * 100,
-                    totalTime, this.maxDepth);
+        if (virtualScreen != null) {
+            String str = String.format("%s \t Complete %.2f \t depth %6d / %6d", robot.getPosition().toString(), ((double) room.getNumCleanedTiles() / room.getNumTiles()) * 100, totalTime, this.maxDepth);
             tGraphics.putString(2, height + 1, str);
             virtualScreen.refresh();
+            virtualScreen.readInput();
+            virtualScreen.stopScreen();
         }
-        virtualScreen.readInput();
-        virtualScreen.stopScreen();
-
         return totalTime;
     }
 
-    public static void main(String[] args) throws IOException {
-        double completionThreadhold = 0.60;
-        int[] depths = {100,1000,10000,100000,1000000};
-        for (int d : depths){
-            try {
-                Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.RANDOM_ROBOT);
-                System.out.println(simulator.runSimulation());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    @Override
+    public String toString() {
+        return "Simulator{" +
+                "maxDepth=" + maxDepth +
+                ", threashold=" + threashold +
+                ", type=" + type +
+                ", totalTime=" + totalTime +
+                '}';
     }
 
+    public int getMaxDepth() {
+        return maxDepth;
+    }
+
+    public double getThreashold() {
+        return threashold;
+    }
+
+    public RobotType getType() {
+        return type;
+    }
+
+    public int getTotalTime() {
+        return totalTime;
+    }
+    public double getPercentCleaned(){
+        return (double)room.getNumCleanedTiles() / (double)room.getNumTiles();
+    }
+
+    public static void main(String[] args) throws IOException {
+        RunSimulations();
+//        double completionThreadhold = 1;
+//        int[] depths = {100,1000,10000,100000,1000000};
+//        for (int d : depths){
+//            try {
+//                Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.STORE_EXPLORED_NODES_AND_MAP, true);
+//                System.out.println(simulator.runSimulation());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
+    public static void RunSimulations() throws IOException{
+        Set<Simulator> simulations = new HashSet<>();
+        int width = 80;
+        int height = 20;
+
+        Terminal terminal = new DefaultTerminalFactory().createTerminal();
+        Screen screen = new TerminalScreen(terminal);
+        VirtualScreen virtualScreen = new VirtualScreen(screen);
+        virtualScreen.startScreen();
+        virtualScreen.setMinimumSize(new TerminalSize(width, height));
+        virtualScreen.clear();
+        TextGraphics tGraphics = virtualScreen.newTextGraphics();
+//        tGraphics.drawRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), getAscii(175));
+        double[] completionThreadholds = {0.10, 0.50, 0.80, 1.0};
+        int[] depths = {100,1000,10000,100000,1000000};
+
+        String headingString = String.format("%30s", "Robot Type");
+        for (double t : completionThreadholds){
+            headingString += String.format("    %.2f", t);
+        }
+        tGraphics.putString(0,0, headingString);
+        tGraphics.drawLine(0,1, headingString.length(), 1, "=".charAt(0));
+        virtualScreen.refresh();
+        int threasholdIndex = 0;
+        for(double threashold : completionThreadholds){
+            for (int d : depths){
+                for (RobotType robotType : RobotType.values()){
+                    tGraphics.putString(0,(robotType.ordinal()*2)+2, String.format("%30s", robotType.toString()));
+                    try {
+                        Simulator simulator = new Simulator(2, width, height, d, threashold, robotType, false);
+                        int res = simulator.runSimulation();
+                        System.out.println(simulator.toString());
+                        simulations.add(simulator);
+
+                        tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*2)+2, String.format("%8d", res));
+                        tGraphics.putString(30 + (threasholdIndex * 8),(robotType.ordinal()*2)+3, String.format("%7.1f%%", simulator.getPercentCleaned()*100));
+                        virtualScreen.refresh();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            threasholdIndex++;
+        }
+        virtualScreen.refresh();
+        virtualScreen.readInput();
+        virtualScreen.stopScreen();
+
+    }
 
     public static final char[] EXTENDED = { 0x00C7, 0x00FC, 0x00E9, 0x00E2,
             0x00E4, 0x00E0, 0x00E5, 0x00E7, 0x00EA, 0x00EB, 0x00E8, 0x00EF,
@@ -131,4 +199,5 @@ public class Simulator {
         }
         return (char) code;
     }
+
 }
