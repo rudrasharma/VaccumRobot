@@ -44,7 +44,6 @@ public class StoreMapDirectionRobot extends Robot {
     @Override
     public void updatePositionAndClean() {
         Position currentPosition = getPosition();
-        System.out.println(currentPosition.toString());
         if(roomContains(currentPosition)) {
             getRoom().cleanTileAtPosition(currentPosition);
         }
