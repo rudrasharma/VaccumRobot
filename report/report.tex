@@ -3,6 +3,7 @@
 \usepackage{times}
 \usepackage{helvet}
 \usepackage{courier}
+\usepackage{amsmath}
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
@@ -63,7 +64,6 @@ This program was implemented by making an algorithm...
 
 We discovered that this program did something...
 
-
 \subsection{Program 3}
 
 \begin{tabular}{ r | l }  
@@ -87,9 +87,11 @@ We discovered that this program did something...
 	Proximity Sensor		& Yes \\
 \end{tabular}
 
-This program was implemented by making an algorithm...
+This program was implemented by mimicking the `Roomba''s algorithm.  The algorithm creates a spiral from the starting position outward.  Once the proximity sensor detects a wall the algorithm changes.  The new algorithm will choose a random direction, and continue straight along that direction until the proximity sensor detects another wall, at which point another random direction is chosen.  
 
-We discovered that this program did something...
+The largest hurdle with this program was finding the best equation to calculate a spiral.  At each step in the simulation a new direction was calculated using the following equation.
+$ 22.5 - (\mathrm {e} ^ x * 45)$
+where time x was decremented by $0.01$ during each step.  The program in theory appeared to be quite efficient, however when run we saw that it had difficulty even completing a 10\% in a timely manner.  I attribute this to some tweaking that is necessary on the spiral formula.  I believe it is going over the same places too much, however given our grid approach any more aggressive spiraling would result in a missed grid item in the center.
 
 
 \subsection{Program 5}
@@ -119,6 +121,46 @@ This program was implemented by making an algorithm...
 
 We discovered that this program did something...
 
+
+\subsection{Program X}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& No \\
+	Store explored nodes	& Yes \\
+	Dirt Sensor				& No \\
+	Proximity Sensor		& No \\
+\end{tabular}
+
+This program is allowed to maintain a list of the grid spaces where it has visited.  It is allowed to know where each of these grid places are in relation to its current location.
+The algorithm used in this program will attempt to try and keep the vacuum close to the grid items that were previously visited.  To do this the following steps are taken.  
+\begin{enumerate}  
+\item Get a list of all the possible steps we can take.
+\item for each step determine a ranking.  This is calculated by summing the distance to each of the existing items.
+\item choose the step with the highest rank.
+\end{enumerate}
+
+If a spot is chosen that is outside of the grid, the program essentially loses a turn.  We also try to avoid revisiting gird places where we have already been.  To do this if a possible location turns up in our visited list, then we increase the rank.  Essentially moving the rank high enough that other options even if they move away from the existing cluster will be chosen.  Thus the rank equation is as follows.
+
+\[
+  Rank=
+	\begin{cases}
+		visited=False: \sum{distance(visited)}\\
+		visited=True: sizeOf(Visited)
+	\end{cases}
+\]
+
+\subsection{Program Y}
+
+\begin{tabular}{ r | l }  
+	Preloaded Map			& No \\
+	Store explored nodes	& Yes \\
+	Dirt Sensor				& No \\
+	Proximity Sensor		& Yes \\
+\end{tabular}
+
+This program is an extension of the `store explored' program.  One of the things we noticed about the store explored was that depending on where it started we could get into a situation where we had finished the middle of the room, and 1 side, but needed to complete the other side.  To do this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
+
+Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
 \section{Results}
 
