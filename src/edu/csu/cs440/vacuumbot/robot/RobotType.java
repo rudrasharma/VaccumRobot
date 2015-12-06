@@ -17,13 +17,11 @@ public enum RobotType {
 			return new StoreExploredProximityRobot(room, speed);
 		}else if(this == STORE_MAP_ROBOT) {
 		    return new StoreMapRobot(room, speed);
-		}else if(this == RANDOM_ROBOT) {
-            return new RandomRobot(room, speed);
         }else if(this == STORE_EXPLORED_NODES_AND_MAP) {
             return new StoreExploredMap(room, speed);
         }else if(this == STORE_MAP_DIRECTION) {
             return new StoreMapDirectionRobot(room, speed);
         }
-		return null;
+		return new RandomRobot(room, speed);
 	}
 }
