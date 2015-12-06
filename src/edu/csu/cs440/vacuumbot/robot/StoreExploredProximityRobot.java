@@ -39,7 +39,7 @@ public class StoreExploredProximityRobot extends Robot {
     public void updatePositionAndClean() {
         Position p = getPosition();
         if (closeToEdge(p) == 0){
-            //lookingForEdge = false;
+            lookingForEdge = false;
         }
 
         if (explored.size() > 1 && explored.get(explored.size()-1) == p){

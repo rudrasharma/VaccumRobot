@@ -113,17 +113,21 @@ public class Simulator {
     }
 
     public static void main(String[] args) throws IOException {
-        RunSimulations();
-//        double completionThreadhold = 1;
-//        int[] depths = {100,1000,10000,100000,1000000};
-//        for (int d : depths){
-//            try {
-//                Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.STORE_EXPLORED_NODES_AND_MAP, true);
-//                System.out.println(simulator.runSimulation());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        boolean runStatistics = true;
+        if (runStatistics) {
+            RunSimulations();
+        }else {
+            double completionThreadhold = 1;
+            int[] depths = {1000,1000,1000};
+            for (int d : depths) {
+                try {
+                    Simulator simulator = new Simulator(2, 80, 20, d, completionThreadhold, RobotType.PROXIMITY, true);
+                    System.out.println(simulator.runSimulation());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     public static void RunSimulations() throws IOException{
         Set<Simulator> simulations = new HashSet<>();

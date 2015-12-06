@@ -68,18 +68,18 @@ public abstract class Robot {
 	protected List<Position> getAvailablePositions(Position p){
 		ArrayList<Position> returning = new ArrayList<>();
 
-		//  0   3   5
-		//  1       6
-		//  2   4   7
+		//  3   2   1
+		//  4       0
+		//  5   6   7
+
+		returning.add(new Position(p.getX() + 1, p.getY() - 0));
+		returning.add(new Position(p.getX() + 1, p.getY() - 1));
+		returning.add(new Position(p.getX() - 0, p.getY() - 1));
 		returning.add(new Position(p.getX() - 1, p.getY() - 1));
 		returning.add(new Position(p.getX() - 1, p.getY() - 0));
 		returning.add(new Position(p.getX() - 1, p.getY() + 1));
-		returning.add(new Position(p.getX() - 0, p.getY() - 1));
 		returning.add(new Position(p.getX() - 0, p.getY() + 1));
-		returning.add(new Position(p.getX() + 1, p.getY() - 1));
-		returning.add(new Position(p.getX() + 1, p.getY() - 0));
 		returning.add(new Position(p.getX() + 1, p.getY() + 1));
-
 		return returning;
 	}
 
