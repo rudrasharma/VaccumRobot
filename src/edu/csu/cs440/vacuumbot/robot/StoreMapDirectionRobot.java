@@ -8,17 +8,21 @@ import edu.csu.cs440.vacuumbot.environment.RectangularRoom;
 
 public class StoreMapDirectionRobot extends Robot {
     
-    private final Set<Position> roomPositions;
     //clean from east to west, and west to east
     private Direction cleanDirection;
     //when at the edge move north or south
     private Direction moveStrategy;
+    private RectangularRoom map;
 
     public StoreMapDirectionRobot(RectangularRoom room, double speed) {
         super(room, speed);
-        roomPositions = getRoomPositions(room.getWidth(), room.getHeight());
         cleanDirection = getRandom(Direction.EAST, Direction.WEST);
         moveStrategy = getRandom(Direction.NORTH, Direction.WEST);
+        map = room;
+    }
+    protected boolean roomContains(Position position) {
+        return position.getX() < map.getWidth()
+                && position.getY() < map.getHeight();
     }
     
     private Direction getRandom(Direction... choices){
@@ -36,27 +40,17 @@ public class StoreMapDirectionRobot extends Robot {
         return Direction.NORTH;
     }
     
-    private Set<Position> getRoomPositions(int width, int height) {
-        Set<Position> positions = new HashSet<>();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Position roomPosition = new Position(x, y);
-                positions.add(roomPosition);
-            }
-        }
-       return positions;
-    }
-    
+   
     @Override
     public void updatePositionAndClean() {
         Position currentPosition = getPosition();
-        if(roomPositions.contains(currentPosition)) {
+        if(roomContains(currentPosition)) {
             getRoom().cleanTileAtPosition(currentPosition);
         }
         Position forwardPoint = move(currentPosition, cleanDirection);
-        if (!roomPositions.contains(forwardPoint)) {
+        if (!roomContains(forwardPoint)) {
             forwardPoint = move(currentPosition, moveStrategy);
-            if (!roomPositions.contains(forwardPoint)) {
+            if (!roomContains(forwardPoint)) {
                 moveStrategy = getOpposite(moveStrategy);
                 forwardPoint = move(currentPosition, moveStrategy);
             }
