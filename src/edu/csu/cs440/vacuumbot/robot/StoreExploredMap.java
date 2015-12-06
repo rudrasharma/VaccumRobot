@@ -25,7 +25,7 @@ public class StoreExploredMap extends Robot {
         map = room;
     }
     protected boolean roomContains(Position position) {
-        return position.getX() < map.getWidth()
+        return 0 <= position.getX() && position.getX() < map.getWidth() && 0 <= position.getY()
                 && position.getY() < map.getHeight();
     }
 
@@ -33,7 +33,6 @@ public class StoreExploredMap extends Robot {
     @Override
     public void updatePositionAndClean() {
         Position p = getPosition();
-
         if (explored.size() > 1 && explored.get(explored.size()-1) == p) {
             //  if the last node is the same as our current then we had no move last time
             //  which means we're stuck, and should randomly choose a direction
@@ -48,7 +47,7 @@ public class StoreExploredMap extends Robot {
         }else {
             explored.add(p);
             ArrayList<PriorityPosition> positions = new ArrayList<>();
-            for (Position possible : getAvailablePositions(p)) {
+            for (Position possible : availablePositionsInRoom(p)) {
                 double priority = 0;
                 for (Position existing : explored) {
                     double d = existing.distanceFrom(possible);
@@ -69,5 +68,14 @@ public class StoreExploredMap extends Robot {
         }
 
     }
-
+    
+    private  List<Position> availablePositionsInRoom(Position current){
+        List<Position> positionsInRoom = new ArrayList<>();
+        for(Position possible: getAvailablePositions(current)) {
+            if(roomContains(possible)) {
+                positionsInRoom.add(possible);
+            }
+        }
+        return positionsInRoom;
+    }
 }
