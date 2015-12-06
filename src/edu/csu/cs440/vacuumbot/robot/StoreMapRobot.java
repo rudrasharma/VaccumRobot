@@ -17,7 +17,7 @@ public class StoreMapRobot extends Robot {
         this.map = room;
     }
     protected boolean roomContains(Position position) {
-        return position.getX() < map.getWidth()
+        return 0 <= position.getX() && position.getX() < map.getWidth() && 0 <= position.getY()
                 && position.getY() < map.getHeight();
     }
     @Override

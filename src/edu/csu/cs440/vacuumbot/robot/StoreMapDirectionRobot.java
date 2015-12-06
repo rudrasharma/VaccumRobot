@@ -21,7 +21,7 @@ public class StoreMapDirectionRobot extends Robot {
         map = room;
     }
     protected boolean roomContains(Position position) {
-        return position.getX() < map.getWidth()
+        return 0 <= position.getX() && position.getX() < map.getWidth() && 0 <= position.getY()
                 && position.getY() < map.getHeight();
     }
     
@@ -44,6 +44,7 @@ public class StoreMapDirectionRobot extends Robot {
     @Override
     public void updatePositionAndClean() {
         Position currentPosition = getPosition();
+        System.out.println(currentPosition.toString());
         if(roomContains(currentPosition)) {
             getRoom().cleanTileAtPosition(currentPosition);
         }
