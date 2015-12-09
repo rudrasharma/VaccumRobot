@@ -37,46 +37,38 @@ The following is a list of the capabilities of each Vacuum robot.
 \end{enumerate}  
 
 
-\subsection{Program 1}
+\subsection{Random Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& Yes \\
-	Store explored nodes	& Yes \\
-	Dirt Sensor				& Yes \\
+	Preloaded Map			& No \\
+	Store explored nodes	& No \\
 	Proximity Sensor		& No \\
 \end{tabular}
 
-This program was implemented by making an algorithm...
+The Random robot was the first Robot we implemented for our study. This robot has no form of storage or sensors to guide it in cleaning a room. 
+When the robot is initialized, it will clean the location it is placed on and then it will randomly select a next point based on what is adjacent to it, thereby giving it eight options. See fig. 1 for display of the Octet grid selection for the random robot. 
 
-We discovered that this program did something...
 
 
-\subsection{Program 2}
+\subsection{Store Map Bot}
 
 \begin{tabular}{ r | l }  
 	Preloaded Map			& Yes \\
 	Store explored nodes	& No \\
-	Dirt Sensor				& Yes \\
 	Proximity Sensor		& No \\
 \end{tabular}
 
-This program was implemented by making an algorithm...
+The preloaded map was a Robot which was given the the exact boundaries of the room prior to start. The objective of this robot was to use its knowledge of the boundaries of the room to avoid attempting to go outside the boundaries of the room. This robot was an extension to the random robot so the path that it choose next was also a random selection from the octet grid, however it knows to avoid the points in the objects which represent points outside the boundaries of the room.
 
-We discovered that this program did something...
-
-\subsection{Program 3}
+\subsection{Store Map with Direction Bot}
 
 \begin{tabular}{ r | l }  
 	Preloaded Map			& Yes \\
-	Store explored nodes	& Yes \\
-	Dirt Sensor				& No \\
-	Proximity Sensor		& Yes \\
+	Store explored nodes	& No \\
+	Proximity Sensor		& No \\
 \end{tabular}
 
-This program was implemented by making an algorithm...
-
-We discovered that this program did something...
-
+The store map with direction was an extension to the store map. However, this map no longer had a random element which decided its next point in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will side to the adjacent slide and do a 180 degree turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
 
 \subsection{Program 4}
 
