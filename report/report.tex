@@ -7,10 +7,7 @@
 \usepackage{tabularx}
 \usepackage{pgfplots}
 \usepackage{floatrow}
-<<<<<<< HEAD
 \usepackage{tikz}
-=======
->>>>>>> refs/remotes/origin/master
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
@@ -18,7 +15,7 @@
 \setcounter{secnumdepth}{0}
 \pgfplotsset{compat=1.12}
 
-\title{AI project}
+\title{Automated Vacuum Cleaner Study}
 \author{Rudra Sharma \and Joshua O'Dell \\ Colorado State University \\ Fort Collins, CO 80523 }
 \begin{document}
 \maketitle
@@ -28,18 +25,20 @@
 The purpose of this project is to simulate an automated vacuum cleaner (AUC). We will represent a room as a 2D plane which has clean and dirty points/tiles. There will also be obstacles in the room such as furniture which would obstruct paths for a vacuum. The goal of the vacuum cleaner is to clear all the dirty points/tiles and navigate/find a path around the obstacles in the room.
 
 In the project we will implement a variety of different vacuums and study its impact on performance. There have been several papers written on the study of automated vacuum cleaners. IRobot’s Roomba is an example of such a robot, we will study this implementation when developing our own algorithms.
+
+Yap [2] explores a variety of grid based approaches, we will be using the octet selection grid when identifying the next point for the robot to move to as shown in figure 1. 
+
 \begin{figure}[h]
 	\begin{tikzpicture}
 	\draw[step=.5cm,color=gray] (0,0) grid (1.5,1.5);
 	\node at (+0.75,+0.75) {B};
 	\end{tikzpicture}
-\caption{ octet choice grid}
+\caption{ octet choice grid: the bot,B, has eight adjacent positions it can move to}
 \end{figure}
 \section{Experiment Implementation}
 
 The project implemented 6 distinct vacuum robots.  Each Robot has a different set of percepts, and the algorithm is adjusted to deal with it. The algorithms in each bot is a greedy algorithm with a different heuristic for calculating the cost based on the percepts the bot has. 
 
-Yap [2] explores a variety of grid based
 The following is a list of the capabilities of each Vacuum robot.
 \begin{enumerate}  
 \item \textbf{Preloaded Map:} Before the cleaning begins a map of the world is loaded into each the vacuum robot.
