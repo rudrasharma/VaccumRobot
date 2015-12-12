@@ -4,12 +4,15 @@
 \usepackage{helvet}
 \usepackage{courier}
 \usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{pgfplots}
+\usepackage{floatrow}
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
-\usepackage{tabularx}
 
 \setcounter{secnumdepth}{0}
+\pgfplotsset{compat=1.12}
 
 \title{AI project}
 \author{Rudra Sharma \and Joshua O'Dell \\ Colorado State University \\ Fort Collins, CO 80523 }
@@ -176,8 +179,83 @@ This program is an extension of the `store explored' program.  One of the things
 
 Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
+\section{Results}
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 96\% 		& 77\% 		& 40\%		& 12\%		\\
+	Store Map		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Map 		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with direction \\
+	Proximity		& 40\%		& 34\% 		& 27\%  	& 25\% 		\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with proximity 	\\
+\end{tabular}
 
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 146783 	& 680976 	& 894746 	& 1000000	\\
+	Store Map		& 373		& 3895 		& 9006  	& 42284 	\\
+	Store Map 		& 160		& 947 		& 1756 		& 2408		\\
+	with direction \\
+	Proximity		& 600159	& 732261 	& 759790 	& 906491	\\
+	Store Explored 	& 535		& 8491		& 22586		& 39161		\\
+	Store Explored 	& 539		& 3857 		& 7163 		& 16898		\\	
+	with proximity 	\\
+\end{tabular}
 
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel=Required Percentage cleaned,
+		ylabel=Steps taken,
+		legend style={at={(0.02,1.1)},anchor=south west}]
+	\addplot[color=red,mark=x] coordinates {
+ 		(  10,   146783)
+ 		(  50,   680976)
+ 		(  80,   894746)
+ 		( 100,  1000000)
+	};
+	\addlegendentry{Random}
+	\addplot[color=green,mark=x] coordinates {
+ 		(  10,   373)
+ 		(  50,  3895)
+ 		(  80,  9006)
+ 		( 100, 42284)
+	};
+	\addlegendentry{Store Map}
+	\addplot[color=orange,mark=x] coordinates {
+ 		(  10,   160)
+ 		(  50,   947)
+ 		(  80,  1756)
+ 		( 100,  2408)
+	};
+	\addlegendentry{Store Map /w direction}
+	\addplot[color=yellow,mark=x] coordinates {
+ 		(  10,  600159)
+ 		(  50,  732261)
+ 		(  80,  759790)
+ 		( 100,  906491)
+	};
+	\addlegendentry{Proximity}
+	\addplot[color=blue,mark=x] coordinates {
+ 		(  10,    535)
+ 		(  50,   8491)
+ 		(  80,  22586)
+ 		( 100,  39161)
+	};
+	\addlegendentry{Store Explored}
+	\addplot[color=black,mark=x] coordinates {
+ 		(  10,    539)
+ 		(  50,   3857)
+ 		(  80,   7163)
+ 		( 100,  16898)
+	};
+	\addlegendentry{Store Explored /w Proximity}
+	\end{axis}
+
+\end{tikzpicture}
 
 \begin{tabular}{ r | l }  
 	\toprule
