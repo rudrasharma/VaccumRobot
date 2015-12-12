@@ -195,7 +195,7 @@ This program is an extension of the `store explored' program.  One of the things
 Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
 \section{Results}
-\subsection{}
+\subsection{Experiment 1}
 We began our data gathering by running each robot and asking it to clean a certain percentage of the room.  The Robot was given 1,000,000 steps to complete the task.  Table:\ref{table:1} describes our results of this initial experiment.  
 
 \begin{table}
@@ -288,7 +288,7 @@ The results of this experiment show us that at 1,000,000 steps most of the robot
 \label{table:2}
 \end{table}
 
-\subsection{}
+\subsection{Experiment 2}
 However 1,000,000 iterations of the program does not allow the robot to complete in a timely manner.  If we assume that it takes 1 second for a robot to clean a square and move on, then each robot would take close to $ 1000000 / 60 / 60 / 24 = 11.5 days $ to complete it's task. 
 
 Our second experiment took this into account and lowered the maximum steps to 10,000.  Table:\ref{table:3} shows the outcome of this, and Figure:\ref{figure:3} shows this graphically.  
@@ -450,8 +450,8 @@ Our second experiment took this into account and lowered the maximum steps to 10
 
 In this experiment we can see more clearly that most of the robots can complete the task when only a small percentage of the room is required.  However, when the percentage increases most robots have fewer successful runs.  We see that the `Random' and `Proximity' Robots do not do a very good job once they are required to clean more then half the room.  The `Stored Map w/ Direction' always completes the task, and the `Store Explored w/ Proximity' does a great job until it is required to clean the entire room.
 
-\subsection{}
-Running a slightly different experiment we tested to see how close some of these robots did when asked to clean the whole room.  Table:\ref{table:5} shows the results of this experiment. The interesting thing to note here is that while `Store Map' and `Store Explored /w Proximity' did not complete 100\% of the room they got very close at 82\% and 94\% respectively.  
+\subsection{Experiment 3}
+Running a slightly different experiment we tested to see how close some of these robots came to succeeding when asked to clean the whole room.  Table:\ref{table:5} shows the results of this experiment. The interesting thing to note here is that while `Store Map' and `Store Explored /w Proximity' did not complete 100\% of the room they got very close at 82\% and 94\% respectively.  
 
 \begin{table}
 \begin{tabular}{ r | l l l l l }  
@@ -472,9 +472,11 @@ Running a slightly different experiment we tested to see how close some of these
 
 \section{Conclusion}
 
-One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `ok'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored /w Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
+One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `OK'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored /w Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
 
-The commercial product most known in this area is the `Roomba'  The Roomba's algorithm is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  This robot has no knowledge of where it is or where it has been, it simply switches between 2 different algorithms based on rather it has hit a wall yet.
+The commercial product most known in this area is the `Roomba'  The Roomba's algorithm is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  I also believe that this algorithm performs better when measured in a non grid environment.  Given the spiral nature of the algorithm it was difficult to map that onto a grid without either missing grid positions or going over them more then once.  This robot has no knowledge of where it is or where it has been, it simply switches between 2 different algorithms based on rather it has hit a wall yet.
+
+There is still a lot of room in this field for better algorithms.  Since we have found that knowledge of the room makes a huge difference in finding an efficient path, perhaps a learning robot could be created.  One that uses the percepts it has to create a statistical probability of where it is in the room based on the given percepts.  We will leave this investigation to future projects. 
 
 % \cite[p. 2] {Optimized_Path_Planning}
 \nocite{*}
