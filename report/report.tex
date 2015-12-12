@@ -4,12 +4,16 @@
 \usepackage{helvet}
 \usepackage{courier}
 \usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{pgfplots}
+\usepackage{floatrow}
+\usepackage{tikz}
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
 
-
 \setcounter{secnumdepth}{0}
+\pgfplotsset{compat=1.12}
 
 \title{AI project}
 \author{Rudra Sharma \and Joshua O'Dell \\ Colorado State University \\ Fort Collins, CO 80523 }
@@ -21,11 +25,18 @@
 The purpose of this project is to simulate an automated vacuum cleaner (AUC). We will represent a room as a 2D plane which has clean and dirty points/tiles. There will also be obstacles in the room such as furniture which would obstruct paths for a vacuum. The goal of the vacuum cleaner is to clear all the dirty points/tiles and navigate/find a path around the obstacles in the room.
 
 In the project we will implement a variety of different vacuums and study its impact on performance. There have been several papers written on the study of automated vacuum cleaners. IRobot’s Roomba is an example of such a robot, we will study this implementation when developing our own algorithms.
-
+\begin{figure}[h]
+	\begin{tikzpicture}
+	\draw[step=.5cm,color=gray] (0,0) grid (1.5,1.5);
+	\node at (+0.75,+0.75) {B};
+	\end{tikzpicture}
+\caption{ octet choice grid}
+\end{figure}
 \section{Experiment Implementation}
 
-The project implemented 6 distinct vacuum robots. Each Robot has a different set of percepts, and the algorithm is adjusted to deal with it.
+The project implemented 6 distinct vacuum robots.  Each Robot has a different set of percepts, and the algorithm is adjusted to deal with it. The algorithms in each bot is a greedy algorithm with a different heuristic for calculating the cost based on the percepts the bot has. 
 
+Yap [2] explores a variety of grid based
 The following is a list of the capabilities of each Vacuum robot.
 \begin{enumerate}  
 \item \textbf{Preloaded Map:} Before the cleaning begins a map of the world is loaded into each the vacuum robot.
@@ -40,11 +51,19 @@ The following is a list of the capabilities of each Vacuum robot.
 \subsection{Random Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& No \\
-	Store explored nodes	& No \\
-	Proximity Sensor		& No \\
+	Preloaded Map 		& No \\
+	Store explored 		& No \\
+	Proximity Sensor 	& No \\
 \end{tabular}
-
+\quad
+\begin{tabular}{ r | l }  
+	Observable		& Unobservable 	\\
+	Deterministic	& Deterministic \\
+	Episodic		& Sequential	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\
+\end{tabular}
 The Random robot was the first Robot we implemented for our study. This robot has no form of storage or sensors to guide it in cleaning a room. 
 When the robot is initialized, it will clean the location it is placed on and then it will randomly select a next point based on what is adjacent to it, thereby giving it eight options. See fig. 1 for display of the Octet grid selection for the random robot. 
 
@@ -53,32 +72,58 @@ When the robot is initialized, it will clean the location it is placed on and th
 \subsection{Store Map Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& Yes \\
-	Store explored nodes	& No \\
-	Proximity Sensor		& No \\
+	Preloaded Map 		& Yes \\
+	Store explored 		& No \\
+	Proximity Sensor 	& No \\
 \end{tabular}
-
+\quad
+\begin{tabular}{ r | l }  
+	Observable 		& Fully 		\\
+	Deterministic 	& Deterministic \\
+	Episodic		& Sequential	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\	
+\end{tabular}
 The preloaded map was a Robot which was given the the exact boundaries of the room prior to start. The objective of this robot was to use its knowledge of the boundaries of the room to avoid attempting to go outside the boundaries of the room. This robot was an extension to the random robot so the path that it choose next was also a random selection from the octet grid, however it knows to avoid the points in the objects which represent points outside the boundaries of the room.
 
 \subsection{Store Map with Direction Bot}
-
 \begin{tabular}{ r | l }  
-	Preloaded Map			& Yes \\
-	Store explored nodes	& No \\
-	Proximity Sensor		& No \\
+	Preloaded Map 		& Yes \\
+	Store explored		& No \\
+	Proximity Sensor 	& No \\
 \end{tabular}
-
+\quad
+\begin{tabular}{ r | l }  
+	Observable		& Fully 		\\
+	Deterministic	& Deterministic \\
+	Episodic		& Sequential	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\	
+\end{tabular}
 The store map with direction was an extension to the store map. However, this map no longer had a random element which decided its next point in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will side to the adjacent slide and do a 180 degree turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
 
-\subsection{Program 4}
+\subsection{Proximity Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& No \\
-	Store explored nodes	& No \\
-	Dirt Sensor				& Yes \\
-	Proximity Sensor		& Yes \\
+	Preloaded Map 		& No \\
+	Store Explored 		& No \\
+	Dirt Sensor 		& Yes \\
+	Proximity Sensor 	& Yes \\
 \end{tabular}
-
+\quad
+\begin{tabular}{ r | l }  
+	Observable		& Partially		\\
+	Deterministic	& Deterministic \\
+	Episodic		& Sequential 	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\	
+\end{tabular} 
+ 	
+ 		
+ 		
 This program was implemented by mimicking the `Roomba''s algorithm.  The algorithm creates a spiral from the starting position outward.  Once the proximity sensor detects a wall the algorithm changes.  The new algorithm will choose a random direction, and continue straight along that direction until the proximity sensor detects another wall, at which point another random direction is chosen.  
 
 The largest hurdle with this program was finding the best equation to calculate a spiral.  At each step in the simulation a new direction was calculated using the following equation.
@@ -86,43 +131,23 @@ $ 22.5 - (\mathrm {e} ^ x * 45)$
 where time x was decremented by $0.01$ during each step.  The program in theory appeared to be quite efficient, however when run we saw that it had difficulty even completing a 10\% in a timely manner.  I attribute this to some tweaking that is necessary on the spiral formula.  I believe it is going over the same places too much, however given our grid approach any more aggressive spiraling would result in a missed grid item in the center.
 
 
-\subsection{Program 5}
+\subsection{Stored Explored Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& Yes \\
-	Store explored nodes	& Yes \\
-	Dirt Sensor				& No \\
-	Proximity Sensor		& No \\
+	Preloaded Map 		& No \\
+	Store explored 		& Yes \\
+	Dirt Sensor 		& No \\
+	Proximity Sensor 	& No \\
 \end{tabular}
-
-This program was implemented by making an algorithm...
-
-We discovered that this program did something...
-
-
-\subsection{Program 6}
-
+\quad
 \begin{tabular}{ r | l }  
-	Preloaded Map			& No \\
-	Store explored nodes	& No \\
-	Dirt Sensor				& Yes \\
-	Proximity Sensor		& No \\
+	Observable 		& Unobservable 	\\
+	Deterministic 	& Deterministic \\
+	Episodic		& Sequential	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\	
 \end{tabular}
-
-This program was implemented by making an algorithm...
-
-We discovered that this program did something...
-
-
-\subsection{Program X}
-
-\begin{tabular}{ r | l }  
-	Preloaded Map			& No \\
-	Store explored nodes	& Yes \\
-	Dirt Sensor				& No \\
-	Proximity Sensor		& No \\
-\end{tabular}
-
 This program is allowed to maintain a list of the grid spaces where it has visited.  It is allowed to know where each of these grid places are in relation to its current location.
 The algorithm used in this program will attempt to try and keep the vacuum close to the grid items that were previously visited.  To do this the following steps are taken.  
 \begin{enumerate}  
@@ -141,22 +166,104 @@ If a spot is chosen that is outside of the grid, the program essentially loses a
 	\end{cases}
 \]
 
-\subsection{Program Y}
+\subsection{Store Explored + Proximity Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map			& No \\
-	Store explored nodes	& Yes \\
-	Dirt Sensor				& No \\
-	Proximity Sensor		& Yes \\
+	Preloaded Map 		& No \\
+	Store explored 		& Yes \\
+	Dirt Sensor 		& No \\
+	Proximity Sensor 	& Yes \\
 \end{tabular}
-
+\quad
+\begin{tabular}{ r | l }  
+	Observable		& Partially 	\\
+	Deterministic	& Deterministic	\\
+	Episodic		& Sequential	\\
+	Static		 	& Static 		\\
+	Discrete 		& Discrete 		\\
+	Agents		 	& Single 		\\	
+\end{tabular}
 This program is an extension of the `store explored' program.  One of the things we noticed about the store explored was that depending on where it started we could get into a situation where we had finished the middle of the room, and 1 side, but needed to complete the other side.  To do this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
 
 Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
 \section{Results}
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 96\% 		& 77\% 		& 40\%		& 12\%		\\
+	Store Map		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Map 		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with direction \\
+	Proximity		& 40\%		& 34\% 		& 27\%  	& 25\% 		\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with proximity 	\\
+\end{tabular}
 
-We found the following.
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 146783 	& 680976 	& 894746 	& 1000000	\\
+	Store Map		& 373		& 3895 		& 9006  	& 42284 	\\
+	Store Map 		& 160		& 947 		& 1756 		& 2408		\\
+	with direction \\
+	Proximity		& 600159	& 732261 	& 759790 	& 906491	\\
+	Store Explored 	& 535		& 8491		& 22586		& 39161		\\
+	Store Explored 	& 539		& 3857 		& 7163 		& 16898		\\	
+	with proximity 	\\
+\end{tabular}
+
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel=Required Percentage cleaned,
+		ylabel=Steps taken,
+		legend style={at={(0.02,1.1)},anchor=south west}]
+	\addplot[color=red,mark=x] coordinates {
+ 		(  10,   146783)
+ 		(  50,   680976)
+ 		(  80,   894746)
+ 		( 100,  1000000)
+	};
+	\addlegendentry{Random}
+	\addplot[color=green,mark=x] coordinates {
+ 		(  10,   373)
+ 		(  50,  3895)
+ 		(  80,  9006)
+ 		( 100, 42284)
+	};
+	\addlegendentry{Store Map}
+	\addplot[color=orange,mark=x] coordinates {
+ 		(  10,   160)
+ 		(  50,   947)
+ 		(  80,  1756)
+ 		( 100,  2408)
+	};
+	\addlegendentry{Store Map /w direction}
+	\addplot[color=yellow,mark=x] coordinates {
+ 		(  10,  600159)
+ 		(  50,  732261)
+ 		(  80,  759790)
+ 		( 100,  906491)
+	};
+	\addlegendentry{Proximity}
+	\addplot[color=blue,mark=x] coordinates {
+ 		(  10,    535)
+ 		(  50,   8491)
+ 		(  80,  22586)
+ 		( 100,  39161)
+	};
+	\addlegendentry{Store Explored}
+	\addplot[color=black,mark=x] coordinates {
+ 		(  10,    539)
+ 		(  50,   3857)
+ 		(  80,   7163)
+ 		( 100,  16898)
+	};
+	\addlegendentry{Store Explored /w Proximity}
+	\end{axis}
+
+\end{tikzpicture}
 
 \begin{tabular}{ r | l }  
 	\toprule
