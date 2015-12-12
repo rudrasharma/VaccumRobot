@@ -267,6 +267,118 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 
 \end{tikzpicture}
 
+
+
+
+
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel=Required Percentage cleaned,
+		ylabel=Steps taken,
+		legend style={at={(0.02,1.1)},anchor=south west}]
+	\addplot[color=red,mark=x] coordinates {
+ 		(  10,   3570)
+ 		(  50,   9752)
+ 		(  80,  10000)
+ 		( 100,  10000)
+	};
+	\addlegendentry{Random}
+	\addplot[color=green,mark=x] coordinates {
+ 		(  10,   375)
+ 		(  50,  3941)
+ 		(  80,  7905)
+ 		( 100, 10000)
+	};
+	\addlegendentry{Store Map}
+	\addplot[color=orange,mark=x] coordinates {
+ 		(  10,   160)
+ 		(  50,   588)
+ 		(  80,  1707)
+ 		( 100,  2403)
+	};
+	\addlegendentry{Store Map /w direction}
+	\addplot[color=yellow,mark=x] coordinates {
+ 		(  10,   6431)
+ 		(  50,   9476)
+ 		(  80,  10000)
+ 		( 100,  10000)
+	};
+	\addlegendentry{Proximity}
+	\addplot[color=blue,mark=x] coordinates {
+ 		(  10,    520)
+ 		(  50,   8539)
+ 		(  80,  10000)
+ 		( 100,  10000)
+	};
+	\addlegendentry{Store Explored}
+	\addplot[color=black,mark=x] coordinates {
+ 		(  10,    533)
+ 		(  50,   3864)
+ 		(  80,   6924)
+ 		( 100,  10000)
+	};
+	\addlegendentry{Store Explored /w Proximity}
+	\end{axis}
+
+\end{tikzpicture}
+
+
+
+
+
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel=Required Percentage cleaned,
+		ylabel=Success Rage (\%),
+		legend style={at={(0.02,1.1)},anchor=south west}]
+	\addplot[color=red,mark=x] coordinates {
+ 		(  10, 73)
+ 		(  50, 46)
+ 		(  80,  7)
+ 		( 100,  0)
+	};
+	\addlegendentry{Random}
+	\addplot[color=green,mark=x] coordinates {
+ 		(  10, 100)
+ 		(  50,  98)
+ 		(  80,  67)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Map}
+	\addplot[color=orange,mark=x] coordinates {
+ 		(  10,  100)
+ 		(  50,  100)
+ 		(  80,  100)
+ 		( 100,  100)
+	};
+	\addlegendentry{Store Map /w direction}
+	\addplot[color=yellow,mark=x] coordinates {
+ 		(  10, 37)
+ 		(  50, 24)
+ 		(  80,  0)
+ 		( 100,  0)
+	};
+	\addlegendentry{Proximity}
+	\addplot[color=blue,mark=x] coordinates {
+ 		(  10, 100)
+ 		(  50,  97)
+ 		(  80,   0)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Explored}
+	\addplot[color=black,mark=x] coordinates {
+ 		(  10,  100)
+ 		(  50,  100)
+ 		(  80,   91)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Explored /w Proximity}
+	\end{axis}
+
+\end{tikzpicture}
+
+
+
 \begin{tabular}{ r | l }  
 	\toprule
 		& avg \% cleaned \\
