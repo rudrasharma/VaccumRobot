@@ -1,13 +1,7 @@
 \documentclass[letterpaper]{article}
 \usepackage{aaai}
-\usepackage{times}
-\usepackage{helvet}
-\usepackage{courier}
 \usepackage{amsmath}
-\usepackage{tabularx}
 \usepackage{pgfplots}
-\usepackage{floatrow}
-\usepackage{tikz}
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
@@ -34,6 +28,7 @@ Yap [2] explores a variety of grid based approaches, we will be using the octet 
 	\node at (+0.75,+0.75) {B};
 	\end{tikzpicture}
 \caption{ octet choice grid: the bot,B, has eight adjacent positions it can move to}
+\label{figure:1}
 \end{figure}
 \section{Experiment Implementation}
 
@@ -53,9 +48,10 @@ The following is a list of the capabilities of each Vacuum robot.
 \subsection{Random Bot}
 
 \begin{tabular}{ r | l }  
-	Preloaded Map 		& No \\
+	Preloaded map 		& No \\
 	Store explored 		& No \\
-	Proximity Sensor 	& No \\
+	Proximity 		 	& No \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -76,7 +72,8 @@ When the robot is initialized, it will clean the location it is placed on and th
 \begin{tabular}{ r | l }  
 	Preloaded Map 		& Yes \\
 	Store explored 		& No \\
-	Proximity Sensor 	& No \\
+	Proximity  		 	& No \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -93,7 +90,8 @@ The preloaded map was a Robot which was given the the exact boundaries of the ro
 \begin{tabular}{ r | l }  
 	Preloaded Map 		& Yes \\
 	Store explored		& No \\
-	Proximity Sensor 	& No \\
+	Proximity 		 	& No \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -112,7 +110,8 @@ The store map with direction was an extension to the store map. However, this ma
 	Preloaded Map 		& No \\
 	Store Explored 		& No \\
 	Dirt Sensor 		& Yes \\
-	Proximity Sensor 	& Yes \\
+	Proximity  		 	& Yes \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -139,7 +138,8 @@ where time x was decremented by $0.01$ during each step.  The program in theory 
 	Preloaded Map 		& No \\
 	Store explored 		& Yes \\
 	Dirt Sensor 		& No \\
-	Proximity Sensor 	& No \\
+	Proximity 		 	& No \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -174,7 +174,8 @@ If a spot is chosen that is outside of the grid, the program essentially loses a
 	Preloaded Map 		& No \\
 	Store explored 		& Yes \\
 	Dirt Sensor 		& No \\
-	Proximity Sensor 	& Yes \\
+	Proximity 		 	& Yes \\
+	sensor 					 \\
 \end{tabular}
 \quad
 \begin{tabular}{ r | l }  
@@ -190,6 +191,7 @@ This program is an extension of the `store explored' program.  One of the things
 Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
 \section{Results}
+\begin{table}[h!]
 \begin{tabular}{ r | l l l l l }  
 					& 10\%		& 50\%		& 80\%		& 100\%		\\
 	\midrule
@@ -202,7 +204,11 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
 	with proximity 	\\
 \end{tabular}
+\caption{Percent success (depth = 1,000,000)}
+\label{table:1}
+\end{table}
 
+\begin{table}[h!]
 \begin{tabular}{ r | l l l l l }  
 					& 10\%		& 50\%		& 80\%		& 100\%		\\
 	\midrule
@@ -215,6 +221,8 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	Store Explored 	& 539		& 3857 		& 7163 		& 16898		\\	
 	with proximity 	\\
 \end{tabular}
+\caption{Actual steps taken to complete (depth = 1,000,000)}
+\end{table}
 
 \begin{tikzpicture}
 	\begin{axis}[
@@ -264,7 +272,6 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	};
 	\addlegendentry{Store Explored /w Proximity}
 	\end{axis}
-
 \end{tikzpicture}
 
 
@@ -393,9 +400,10 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 \end{tabular}
 
 \section{Conclusion}
-
+\ref{table:1}
 % \cite[p. 2] {Optimized_Path_Planning}
-
+\listoftables
+\listoffigures
 \nocite{*}
 \bibliography{report}
 \bibliographystyle{aaai}
