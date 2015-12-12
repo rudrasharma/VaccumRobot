@@ -2,6 +2,7 @@
 \usepackage{aaai}
 \usepackage{amsmath}
 \usepackage{pgfplots}
+\usepackage{caption}
 \RequirePackage{booktabs}
 \setlength{\pdfpagewidth}{8.5in} 
 \setlength{\pdfpageheight}{11in}
@@ -25,10 +26,12 @@ Yap [2] explores a variety of grid based path finding algorithms, they identify 
 The implementation for this this project will be derived from a rudimentary implementation of a roomba robot [4]. This implementation [4] chose its next move based on a random selection from a 360$^{\circ}$ scale. We have instead opted to use the octect based selection as shown on figure 1 to choose the next tile. 
 
 \begin{figure}[h]
+\begin{center}
 	\begin{tikzpicture}
 	\draw[step=.5cm,color=gray] (0,0) grid (1.5,1.5);
 	\node at (+0.75,+0.75) {B};
 	\end{tikzpicture}
+\end{center}
 \caption{ octet choice grid: the bot,B, has eight adjacent positions it can move to}
 \label{figure:1}
 \end{figure}
@@ -161,7 +164,6 @@ The algorithm used in this program will attempt to try and keep the vacuum close
 \end{enumerate}
 
 If a spot is chosen that is outside of the grid, the program essentially loses a turn.  We also try to avoid revisiting gird places where we have already been.  To do this if a possible location turns up in our visited list, then we increase the rank.  Essentially moving the rank high enough that other options even if they move away from the existing cluster will be chosen.  Thus the rank equation is as follows.
-
 \[
   Rank=
 	\begin{cases}
@@ -193,7 +195,10 @@ This program is an extension of the `store explored' program.  One of the things
 Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  This the robot can start cleaning on 1 side of the room, and not have to back track.  The result was improved cleaning times.
 
 \section{Results}
-\begin{table}[h!]
+\subsection{}
+We began our data gathering by running each robot and asking it to clean a certain percentage of the room.  The Robot was given 1,000,000 steps to complete the task.  Table:\ref{table:1} describes our results of this initial experiment.  
+
+\begin{table}
 \begin{tabular}{ r | l l l l l }  
 					& 10\%		& 50\%		& 80\%		& 100\%		\\
 	\midrule
@@ -206,31 +211,16 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
 	with proximity 	\\
 \end{tabular}
-\caption{Percent success (depth = 1,000,000)}
+\caption[success]{Percent success (depth = 1,000,000)}
 \label{table:1}
 \end{table}
 
-\begin{table}[h!]
-\begin{tabular}{ r | l l l l l }  
-					& 10\%		& 50\%		& 80\%		& 100\%		\\
-	\midrule
-	Random			& 146783 	& 680976 	& 894746 	& 1000000	\\
-	Store Map		& 373		& 3895 		& 9006  	& 42284 	\\
-	Store Map 		& 160		& 947 		& 1756 		& 2408		\\
-	with direction \\
-	Proximity		& 600159	& 732261 	& 759790 	& 906491	\\
-	Store Explored 	& 535		& 8491		& 22586		& 39161		\\
-	Store Explored 	& 539		& 3857 		& 7163 		& 16898		\\	
-	with proximity 	\\
-\end{tabular}
-\caption{Actual steps taken to complete (depth = 1,000,000)}
-\end{table}
-
+\begin{figure}
 \begin{tikzpicture}
 	\begin{axis}[
 		xlabel=Required Percentage cleaned,
 		ylabel=Steps taken,
-		legend style={at={(0.02,1.1)},anchor=south west}]
+		legend style={at={(1.0,0.95)},anchor=south east}]
 	\addplot[color=red,mark=x] coordinates {
  		(  10,   146783)
  		(  50,   680976)
@@ -275,18 +265,137 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Store Explored /w Proximity}
 	\end{axis}
 \end{tikzpicture}
+\caption{Steps taken by each Robot to complete the required percentage (depth = 1,000,000)}
+\label{figure:2}
+\end{figure}
 
+The results of this experiment show us that at 1,000,000 steps most of the robots can succeed even if the requirement is to clean 100\% of the room.  However, the above table hides a key element `how long did it actually take'.  Table:\ref{table:2} shows in more detail how many iterations each robot actually took to complete the task.  The numbers provided are an average of 100 runs, this average includes the failures and successes.  If a robot was unable to complete the task then its step count would be 1,000,000, and contribute to bringing the step count up.  Figure:\ref{figure:2} shows this in a graphical format.  We can see that the Random and Proximity robots initially took the longest to complete their tasks, and continued to do so as the required percentage increased.  
 
+\begin{table}
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 146783 	& 680976 	& 894746 	& 1000000	\\
+	Store Map		& 373		& 3895 		& 9006  	& 42284 	\\
+	Store Map 		& 160		& 947 		& 1756 		& 2408		\\
+	with direction \\
+	Proximity		& 600159	& 732261 	& 759790 	& 906491	\\
+	Store Explored 	& 535		& 8491		& 22586		& 39161		\\
+	Store Explored 	& 539		& 3857 		& 7163 		& 16898		\\	
+	with proximity 	\\
+\end{tabular}
+\caption{Actual steps taken to complete task (depth = 1,000,000)}
+\label{table:2}
+\end{table}
 
+\subsection{}
+However 1,000,000 iterations of the program does not allow the robot to complete in a timely manner.  If we assume that it takes 1 second for a robot to clean a square and move on, then each robot would take close to $ 1000000 / 60 / 60 / 24 = 11.5 days $ to complete it's task. 
 
+Our second experiment took this into account and lowered the maximum steps to 10,000.  Table:\ref{table:3} shows the outcome of this, and Figure:\ref{figure:3} shows this graphically.  
 
+\begin{table}[!ht]
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 96\% 		& 77\% 		& 40\%		& 12\%		\\
+	Store Map		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Map 		& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with direction \\
+	Proximity		& 40\%		& 34\% 		& 27\%  	& 25\% 		\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	Store Explored 	& 100\%		& 100\% 	& 100\%  	& 100\% 	\\
+	with proximity 	\\
+\end{tabular}
+\caption[success]{Percent success (depth = 1,000,000)}
+\label{table:3}
+\end{table}
+
+\begin{figure}
+\begin{tikzpicture}
+	\begin{axis}[
+		xlabel=Required Percentage cleaned,
+		ylabel=Success Rate (\%),
+		legend style={at={(1.0,0.95)},anchor=south east}]
+	\addplot[color=red,mark=x] coordinates {
+ 		(  10, 73)
+ 		(  20, 46)
+ 		(  50,  7)
+ 		(  80,  0)
+ 		( 100,  0)
+	};
+	\addlegendentry{Random}
+	\addplot[color=green,mark=x] coordinates {
+ 		(  10, 100)
+ 		(  20, 100)
+ 		(  50,  98)
+ 		(  80,  67)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Map}
+	\addplot[color=orange,mark=x] coordinates {
+ 		(  10,  100)
+ 		(  20,  100)
+ 		(  50,  100)
+ 		(  80,  100)
+ 		( 100,  100)
+	};
+	\addlegendentry{Store Map /w direction}
+	\addplot[color=yellow,mark=x] coordinates {
+ 		(  10, 37)
+ 		(  20, 32)
+ 		(  50, 24)
+ 		(  80,  0)
+ 		( 100,  0)
+	};
+	\addlegendentry{Proximity}
+	\addplot[color=blue,mark=x] coordinates {
+ 		(  10, 100)
+ 		(  20, 100)
+ 		(  50,  97)
+ 		(  80,   0)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Explored}
+	\addplot[color=black,mark=x] coordinates {
+ 		(  10,  100)
+ 		(  20,  100)
+ 		(  50,  100)
+ 		(  80,   91)
+ 		( 100,   0)
+	};
+	\addlegendentry{Store Explored /w Proximity}
+	\end{axis}
+\end{tikzpicture}
+\caption{Percentage of successful runs (depth = 10,000)}
+\label{figure:3}
+\end{figure}
+
+\begin{table}
+\begin{tabular}{ r | l l l l l }  
+					& 10\%		& 50\%		& 80\%		& 100\%		\\
+	\midrule
+	Random			& 3570 		& 9752 		& 10000 	& 10000	\\
+	Store Map		& 375		& 3941 		& 7905  	& 10000 	\\
+	Store Map 		& 160		& 588 		& 1707 		& 2403		\\
+	with direction \\
+	Proximity		& 6431		& 9476 		& 10000 	& 10000		\\
+	Store Explored 	& 520		& 8539		& 10000		& 10000		\\
+	Store Explored 	& 533		& 3864 		& 6924 		& 10000		\\	
+	with proximity 	\\
+\end{tabular}
+\caption{Actual steps taken to complete task (depth = 10,000)}
+\label{table:4}
+\end{table}
+
+\begin{figure}
 \begin{tikzpicture}
 	\begin{axis}[
 		xlabel=Required Percentage cleaned,
 		ylabel=Steps taken,
-		legend style={at={(0.02,1.1)},anchor=south west}]
+		legend style={at={(1.0,0.95)},anchor=south east}]
 	\addplot[color=red,mark=x] coordinates {
  		(  10,   3570)
+ 		(  20,   6761)
  		(  50,   9752)
  		(  80,  10000)
  		( 100,  10000)
@@ -294,6 +403,7 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Random}
 	\addplot[color=green,mark=x] coordinates {
  		(  10,   375)
+ 		(  20,   913)
  		(  50,  3941)
  		(  80,  7905)
  		( 100, 10000)
@@ -301,6 +411,7 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Store Map}
 	\addplot[color=orange,mark=x] coordinates {
  		(  10,   160)
+ 		(  20,   339)
  		(  50,   588)
  		(  80,  1707)
  		( 100,  2403)
@@ -308,6 +419,7 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Store Map /w direction}
 	\addplot[color=yellow,mark=x] coordinates {
  		(  10,   6431)
+ 		(  20,   7123)
  		(  50,   9476)
  		(  80,  10000)
  		( 100,  10000)
@@ -315,6 +427,7 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Proximity}
 	\addplot[color=blue,mark=x] coordinates {
  		(  10,    520)
+ 		(  20,   1467)
  		(  50,   8539)
  		(  80,  10000)
  		( 100,  10000)
@@ -322,6 +435,7 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\addlegendentry{Store Explored}
 	\addplot[color=black,mark=x] coordinates {
  		(  10,    533)
+ 		(  20,   1185)
  		(  50,   3864)
  		(  80,   6924)
  		( 100,  10000)
@@ -330,82 +444,39 @@ Adding a proximity sensor the the vacuum robot allowed us to do the following.  
 	\end{axis}
 
 \end{tikzpicture}
+\caption{Steps taken by each Robot to complete the required percentage (depth = 10,000)}
+\label{figure:4}
+\end{figure}
 
+In this experiment we can see more clearly that most of the robots can complete the task when only a small percentage of the room is required.  However, when the percentage increases most robots have fewer successful runs.  We see that the `Random' and `Proximity' Robots do not do a very good job once they are required to clean more then half the room.  The `Stored Map w/ Direction' always completes the task, and the `Store Explored w/ Proximity' does a great job until it is required to clean the entire room.
 
+\subsection{}
+Running a slightly different experiment we tested to see how close some of these robots did when asked to clean the whole room.  Table:\ref{table:5} shows the results of this experiment. The interesting thing to note here is that while `Store Map' and `Store Explored /w Proximity' did not complete 100\% of the room they got very close at 82\% and 94\% respectively.  
 
-
-
-\begin{tikzpicture}
-	\begin{axis}[
-		xlabel=Required Percentage cleaned,
-		ylabel=Success Rage (\%),
-		legend style={at={(0.02,1.1)},anchor=south west}]
-	\addplot[color=red,mark=x] coordinates {
- 		(  10, 73)
- 		(  50, 46)
- 		(  80,  7)
- 		( 100,  0)
-	};
-	\addlegendentry{Random}
-	\addplot[color=green,mark=x] coordinates {
- 		(  10, 100)
- 		(  50,  98)
- 		(  80,  67)
- 		( 100,   0)
-	};
-	\addlegendentry{Store Map}
-	\addplot[color=orange,mark=x] coordinates {
- 		(  10,  100)
- 		(  50,  100)
- 		(  80,  100)
- 		( 100,  100)
-	};
-	\addlegendentry{Store Map /w direction}
-	\addplot[color=yellow,mark=x] coordinates {
- 		(  10, 37)
- 		(  50, 24)
- 		(  80,  0)
- 		( 100,  0)
-	};
-	\addlegendentry{Proximity}
-	\addplot[color=blue,mark=x] coordinates {
- 		(  10, 100)
- 		(  50,  97)
- 		(  80,   0)
- 		( 100,   0)
-	};
-	\addlegendentry{Store Explored}
-	\addplot[color=black,mark=x] coordinates {
- 		(  10,  100)
- 		(  50,  100)
- 		(  80,   91)
- 		( 100,   0)
-	};
-	\addlegendentry{Store Explored /w Proximity}
-	\end{axis}
-
-\end{tikzpicture}
-
-
-
-\begin{tabular}{ r | l }  
-	\toprule
-		& avg \% cleaned \\
+\begin{table}
+\begin{tabular}{ r | l l l l l }  
+					& \% cleaned \\
 	\midrule
-	P1	& 15 \\
-	P2	& 45 \\
-	P3	& 84 \\
-	P4	& 56 \\
-	P5	& 77 \\
-	P6	& 1 \\
-	\bottomrule
+	Random			& 24 	\\
+	Store Map		& 82	\\
+	Store Map 		& 100	\\
+	with direction \\
+	Proximity		& 17 	\\
+	Store Explored 	& 54	\\
+	Store Explored 	& 94	\\	
+	with proximity 	\\
 \end{tabular}
+\caption{Actual percentage cleaned (depth = 10,000)}
+\label{table:5}
+\end{table}
 
 \section{Conclusion}
-\ref{table:1}
+
+One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `ok'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored /w Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
+
+The commercial product most known in this area is the `Roomba'  The Roomba's algorithm is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  This robot has no knowledge of where it is or where it has been, it simply switches between 2 different algorithms based on rather it has hit a wall yet.
+
 % \cite[p. 2] {Optimized_Path_Planning}
-\listoftables
-\listoffigures
 \nocite{*}
 \bibliography{report}
 \bibliographystyle{aaai}
