@@ -17,13 +17,13 @@
 
 \section{Introduction}
 
-The purpose of this project is to simulate an automated vacuum cleaner (AUC). We represent a room as a 2D plane which has clean and dirty points/tiles. The goal of the vacuum cleaner is to clear all the dirty points and navigate/find a path around the the room.
+The purpose of this project is to simulate an automated vacuum cleaner (AUC). We represent a room as a 2D plane which has clean and dirty points/tiles. The goal of the vacuum cleaner is to clear all the dirty tiles and navigate/find a path around the the room.
 
-In the project, we implement a variety of different vacuums and study its impact on performance. There have been several papers written on the study of automated vacuum cleaners. IRobot�s Roomba\cite{HSW_Roomba} is an example of such a robot, we will study this implementation when developing our own algorithms.
+In the project, we implement a variety of different vacuums and study their impact on performance. There have been several papers written on the study of automated vacuum cleaners. IRobot�s Roomba\cite{HSW_Roomba} is an example of such a robot, we will study this implementation when developing our own algorithms.
 
-The paper \cite{Grid­based_Path­finding} explores a variety of grid based path finding algorithms, they identify an octet selection grid as an option of choosing the next point for the robot to move to as shown in figure 1. While the direct application of this paper will apply to room cleaning vacuum, these path-finding algorithms can be applied to robots searching for landmines, lawnmowers, and other agricultural tasks \cite{Optimal_Line­sweep­based}. 
+The paper \cite{Grid­based_Path­finding} explores a variety of grid based path finding algorithms, they identify an octet selection grid as an option of choosing the next point for the robot to move to as shown in figure 1. While the direct application of this paper will apply to room cleaning vacuums, these path-finding algorithms can be applied to robots searching for landmines, lawnmowers, and other agricultural tasks \cite{Optimal_Line­sweep­based}. 
 
-The implementation for this this project will be derived from a rudimentary implementation of a roomba robot \cite{Simulation_for_Roomba}. This implementation \cite{Simulation_for_Roomba} chooses its next tile based on a random selection from a 360$^{\circ}$ scale. We have instead opted to use the octet based selection as shown on figure 1 to choose the next tile. 
+The implementation for this project will be derived from a rudimentary implementation of a roomba robot \cite{Simulation_for_Roomba}. This implementation \cite{Simulation_for_Roomba} chooses its next tile based on a random selection from a 360$^{\circ}$ scale. We have instead opted to use the octet based selection as shown on figure 1 to choose the next tile. 
 
 \begin{figure}[h]
 \begin{center}
@@ -32,7 +32,7 @@ The implementation for this this project will be derived from a rudimentary impl
 	\node at (+0.75,+0.75) {B};
 	\end{tikzpicture}
 \end{center}
-\caption{ octet choice grid: the bot,B, has eight adjacent positions it can move to}
+\caption{ octet choice grid: the bot B has eight adjacent positions it can move to}
 \label{figure:1}
 \end{figure}
 \section{Experiment Implementation}
@@ -41,8 +41,8 @@ The project implemented six distinct vacuum robots.  Each Robot has a different 
 
 The following is a list of the capabilities of each Vacuum robot.
 \begin{enumerate}  
-\item \textbf{Preloaded Map:} Before the cleaning begins a map of the world is loaded into each the vacuum robot.
-\item \textbf{Store explored nodes:} As the vacuum robot moves through the world it is allowed to store without limit, the tiles where it has been, and the status of that tile
+\item \textbf{Preloaded Map:} Before the cleaning begins a map of the world is loaded into each the vacuum robot.  The robot also has knowledge of where it is on the map.
+\item \textbf{Store explored tiles:} As the vacuum robot moves through the world it is allowed to store without limit, the tiles where it has been, and the status of that tile
 \item \textbf{Proximity Sensor:} the vacuum robot has the ability to know when it is close to a wall.
 \end{enumerate}  
 
@@ -104,7 +104,7 @@ The preloaded map was a Robot which was given the the exact boundaries of the ro
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-The store map with direction was an extension to the store map. However, this map no longer had a random element which decided its next point in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will side to the adjacent slide and do a 180$^{\circ}$ turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
+The store map with direction was an extension to the store map. However, this map no longer had a random element which decided its next point in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will slide to the adjacent side and do a 180$^{\circ}$ turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
 
 \subsection{Proximity Bot}
 
@@ -130,7 +130,7 @@ This program was implemented by mimicking the `Roomba''s algorithm [1].  The alg
 
 The largest hurdle with this program was finding the best equation to calculate a spiral.  At each step in the simulation a new direction was calculated using the following equation.
 $ 22.5 - (\mathrm {e} ^ x * 45)$
-where time x was decremented by $0.01$ during each step.  The program appeared to be efficient, however when run, we saw that it had difficulty achieving 10\% coverage in a timely manner.  We attribute this to some tweaking that is necessary on the spiral formula.  We believe it is going over the same places too much, however given our grid approach any more aggressive spiraling would result in a missed grid tiles in the center.
+where time x was decremented by $0.01$ during each step.  The program appeared to be efficient, however when run, we saw that it had difficulty achieving 10\% coverage in a timely manner.  We attribute this to some tweaking that is necessary on the spiral formula.  We believe it is going over the same places too much, however given our grid approach any more aggressive spiraling would result in a missed grid tile in the center.
 
 
 \subsection{Stored Explored Bot}
@@ -150,15 +150,15 @@ where time x was decremented by $0.01$ during each step.  The program appeared t
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-This program is allowed to maintain a list of the grid spaces where it has visited.  It is allowed to know where each of these grid places are in relation to its current location.
-The algorithm used in this program will attempt keep the vacuum close to the grid items that were previously visited.  To do this the following steps are taken.  
+This program is allowed to maintain a list of the grid tiles where it has visited.  It is allowed to know where each of these grid tiles are in relation to its current location.
+The algorithm used in this program will attempt keep the vacuum close to the grid tiles that were previously visited.  To do this the following steps are taken.  
 \begin{enumerate}  
 \item Get a list of all the possible steps we can take.
 \item For each step determine a ranking.  This is calculated by summing the distance to each of the existing items.
-\item Choose the step with the highest rank.
+\item Choose the step with the lowest rank.
 \end{enumerate}
 
-If a spot is chosen that is outside of the grid, the programs time complexity ranking is incremented, however the robot will not be able to move there.  We also try to avoid revisiting gird points where we have already been visited once.  To do this if a possible location turns up in our visited locations, then we increase the rank.  Essentially moving the rank high enough that other options, even if they move away from the existing cluster, will be chosen.  Thus, the rank equation is as follows.
+If a spot is chosen that is outside of the grid, the program's time complexity ranking is incremented, however the robot will not be able to move there.  We also try to avoid revisiting gird tiles that have already been visited.  To do this if a possible location turns up in our visited locations, then we increase the rank.  Essentially moving the rank high enough that other options, even if they move away from the existing cluster, will be chosen.  Thus, the rank equation is as follows.
 \[
   Rank=
 	\begin{cases}
@@ -184,9 +184,9 @@ If a spot is chosen that is outside of the grid, the programs time complexity ra
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-This program is an extension of the `store explored' program.  An observation about made about the store explored was that depending on where it started, we could get into a situation where we had finished the middle of the room, and one side, but needed to complete the other side.  To do this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
+This program is an extension of the `store explored' program.  An observation about made about the store explored was that depending on where it started, we could get into a situation where we had finished the middle of the room, and one side, but needed to complete the other side.  To resolve this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
 
-Adding a proximity sensor the the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  Then this robot can start cleaning on one side of the room, and not have to back track.  The result was improved cleaning times.
+Adding a proximity sensor to the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  Then this robot can start cleaning on one side of the room, and not have to back track.  
 
 \section{Results}
 \subsection{Experiment 1}
@@ -445,20 +445,18 @@ Our second experiment took this into account and lowered the maximum steps to 10
 In this experiment we can see more clearly that most of the robots can complete the task when only a small percentage of the room is required.  However, when the coverage percentage increases most robots have fewer successful runs.  We see that the `Random' and `Proximity' Robots do not do a very good job once they are required to clean more then half of the room.  The `Stored Map w/ Direction' always completes the task, and the `Store Explored w/ Proximity' does a great job until it is required to clean the entire room.
 
 \subsection{Experiment 3}
-Running a slightly different experiment we tested to see how close some of these robots came to succeeding when asked to clean the whole room.  Table:\ref{table:5} shows the results of this experiment. The interesting thing to note here is that while `Store Map' and `Store Explored /w Proximity' did not complete 100\% of the room they got very close at 82\% and 94\% respectively.  
+Running a slightly different experiment we tested to see how close some of these robots came to succeeding when asked to clean the whole room.  Table:\ref{table:5} shows the results of this experiment. The interesting thing to note here is that while `Store Map' and `Store Explored with Proximity' did not complete 100\% of the room they got very close at 82\% and 94\% respectively.  
 
 \begin{table}
 \begin{tabular}{ r | l l l l l }  
-					& \% cleaned \\
+									& \% cleaned \\
 	\midrule
-	Random			& 24 	\\
-	Store Map		& 82	\\
-	Store Map 		& 100	\\
-	with direction \\
-	Proximity		& 17 	\\
-	Store Explored 	& 54	\\
-	Store Explored 	& 94	\\	
-	with proximity 	\\
+	Random							& 24 	\\
+	Store Map						& 82	\\
+	Store Map with direction		& 100	\\
+	Proximity						& 17 	\\
+	Store Explored 					& 54	\\
+	Store Explored with proximity	& 94	\\	
 \end{tabular}
 \caption{Actual percentage cleaned (depth = 10,000)}
 \label{table:5}
@@ -466,7 +464,7 @@ Running a slightly different experiment we tested to see how close some of these
 
 \section{Conclusion}
 
-One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `OK'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored /w Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
+One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `OK'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored with Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
 
 The commercial product most known in this area is the `Roomba.'  The Roomba's algorithm[1] is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  I also believe that this algorithm performs better when measured in a non grid environment.  Given the spiral nature of the algorithm it was difficult to map that onto a grid without missing grid positions, or going over them more then once.  This robot has no knowledge of where it is or where it has been, it simply switches between two different algorithms based on whether it has hit a wall yet.
 
