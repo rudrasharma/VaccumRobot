@@ -86,7 +86,7 @@ When the robot is initialized, it will clean the location it is placed on and th
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-The preloaded map was a Robot which was given the the exact boundaries of the room prior to start. The objective of this robot was to use its knowledge of the boundaries of the room to avoid attempting to go outside the boundaries of the room. This robot was an extension to the random robot so the path that it choose next was also a random selection from the octet grid, however it knows to avoid the points which represent tiles outside the boundaries of the room.
+The store map was a Robot which was given the the exact boundaries of the room prior to start. The objective of this robot was to use its knowledge of the boundaries of the room to avoid attempting to go outside the boundaries of the room. This robot was an extension to the random robot so the path that it choose next was also a random selection from the octet grid, however it knows to avoid the points which represent tiles outside the boundaries of the room.
 
 \subsection{Store Map with Direction Bot}
 \begin{tabular}{ r | l }  
@@ -104,7 +104,7 @@ The preloaded map was a Robot which was given the the exact boundaries of the ro
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-The store map with direction was an extension to the store map. However, this map no longer had a random element which decided its next point in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will slide to the adjacent side and do a 180$^{\circ}$ turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
+The store map with direction was an extension to the store map. However, this bot does not randomly select its next tile in the room. Instead it uses a strategy of maintaining a direction until it reaches the boundary of a room. After it reaches a boundary it will slide to the adjacent side and do a 180$^{\circ}$ turn and travel in the the opposite direction it came from until it hits the opposite boundary of the room. It will keep repeating this process until it completes the entire room.
 
 \subsection{Proximity Bot}
 
@@ -126,11 +126,11 @@ The store map with direction was an extension to the store map. However, this ma
  	
  		
  		
-This program was implemented by mimicking the `Roomba''s algorithm [1].  The algorithm creates a spiral from the starting position outward.  Once the proximity sensor detects a wall the algorithm changes.  The new algorithm will choose a random direction, and continue straight along that direction until the proximity sensor detects another wall, at which point another random direction is chosen.  
+This program was implemented by mimicking the `Roomba''s algorithm \cite{HSW_Roomba}.  The algorithm creates a spiral from the starting position outward.  Once the proximity sensor detects a wall the algorithm changes.  The new algorithm will choose a random direction, and continue straight along that direction until the proximity sensor detects another wall, at which point another random direction is chosen.  
 
 The largest hurdle with this program was finding the best equation to calculate a spiral.  At each step in the simulation a new direction was calculated using the following equation.
 $ 22.5 - (\mathrm {e} ^ x * 45)$
-where time x was decremented by $0.01$ during each step.  The program appeared to be efficient, however when run, we saw that it had difficulty achieving 10\% coverage in a timely manner.  We attribute this to some tweaking that is necessary on the spiral formula.  We believe it is going over the same places too much, however given our grid approach any more aggressive spiraling would result in a missed grid tile in the center.
+where time x was decremented by $0.01$ during each step.  The program appeared to be efficient, however when run, we saw that it had difficulty achieving 10\% coverage in a timely manner.  We attribute this to some tweaking that is necessary on the spiral formula.  We believe it is going over the same places too much, however given our grid approach more aggressive spiraling would result in a missed grid tile in the center.
 
 
 \subsection{Stored Explored Bot}
@@ -158,7 +158,7 @@ The algorithm used in this program will attempt keep the vacuum close to the gri
 \item Choose the step with the lowest rank.
 \end{enumerate}
 
-If a spot is chosen that is outside of the grid, the program's time complexity ranking is incremented, however the robot will not be able to move there.  We also try to avoid revisiting gird tiles that have already been visited.  To do this if a possible location turns up in our visited locations, then we increase the rank.  Essentially moving the rank high enough that other options, even if they move away from the existing cluster, will be chosen.  Thus, the rank equation is as follows.
+If a spot is chosen that is outside of the grid, the program's time complexity ranking is incremented, however the robot will not be able to move there.  We also try to avoid revisiting grid tiles that have already been visited.  To do this, if a possible location turns up in our visited locations, then we increase the rank.  Essentially moving the rank high enough that other options, even if they move away from the existing cluster, will be chosen.  Thus, the rank equation is as follows.
 \[
   Rank=
 	\begin{cases}
@@ -184,7 +184,7 @@ If a spot is chosen that is outside of the grid, the program's time complexity r
 	Discrete 		& Discrete 		\\
 	Agents		 	& Single 		\\	
 \end{tabular}
-This program is an extension of the `store explored' program.  An observation about made about the store explored was that depending on where it started, we could get into a situation where we had finished the middle of the room, and one side, but needed to complete the other side.  To resolve this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
+This program is an extension of the `store explored' program.  An observation we made about the store explored was that depending on where it started, we could get into a situation where we had finished the middle of the room, and one side, but needed to complete the other side.  To resolve this we have to cross the already cleaned region, which our algorithm did not handle elegantly.
 
 Adding a proximity sensor to the vacuum robot allowed us to do the following.  When the robot first starts cleaning it chooses a single direction.  Once it reaches a wall it then begins the existing algorithm from the `store explored' robot.  Then this robot can start cleaning on one side of the room, and not have to back track.  
 
@@ -263,7 +263,7 @@ We began our data gathering by running each robot and asking it to clean a certa
 \label{figure:2}
 \end{figure}
 
-The results of this experiment show us that at 1,000,000 steps most of the robots can succeed even if the requirement is to clean 100\% of the room.  However, the above table hides a key element `how long did it actually take'.  Table:\ref{table:2} shows in more detail how many iterations each robot actually took to complete the task.  The numbers provided are an average of 100 runs, this average includes the failures and successes.  If a robot was unable to complete the task then its step count would reach 1,000,000 and halt, indicating failure to achieve coverage, and contribute to bringing the average processing steps higher.  Figure:\ref{figure:2} shows this in a graphical format.  We can see that the Random and Proximity robots initially took the longest to complete their tasks, and continued to do so as the required percentage increased.  
+The results of this experiment show us that at 1,000,000 steps most of the robots can succeed even if the requirement is to clean 100\% of the room.  However, the above table hides a key element, `how long did it actually take'.  Table:\ref{table:2} shows in more detail how many iterations each robot actually took to complete the task.  The numbers provided are an average of 100 runs, this average includes the failures and successes.  If a robot was unable to complete the task then its step count would reach 1,000,000 and halt, indicating failure to achieve coverage, and contribute to bringing the average processing steps higher.  Figure:\ref{figure:2} shows this in a graphical format.  We can see that the Random and Proximity robots initially took the longest to complete their tasks, and continued to do so as the required percentage increased.  
 
 \begin{table}
 \begin{tabular}{ r | l l l l l }  
@@ -283,7 +283,7 @@ The results of this experiment show us that at 1,000,000 steps most of the robot
 \end{table}
 
 \subsection{Experiment 2}
-However 1,000,000 iterations of the program does not allow the robot to complete in an acceptable amount of time.  If we assume that it takes one second for a robot to clean a square and move on, then each robot would take close to $ 1000000 / 60 / 60 / 24 = 11.5 days $ to complete it's task. 
+1,000,000 iterations of the program may not be an acceptable amount of time for a robot to clean a room.  If we assume that it takes one second for a robot to clean a square and move on, then each robot would take close to $ 1000000 / 60 / 60 / 24 = 11.5 days $ to complete it's task. 
 
 Our second experiment took this into account and lowered the maximum steps to 10,000.  Table:\ref{table:3} shows the outcome of this, and Figure:\ref{figure:3} shows this graphically.  
 
@@ -466,7 +466,7 @@ Running a slightly different experiment we tested to see how close some of these
 
 One of the questions we had when we started this project was `Can a crippled robot perform as well as an Omnipotent one'?  The answer we found out was absolutely not.  However given some clever algorithms and relaxing the requirements of 100\% clean allows for these robots to do `OK'.  When the robot is given the map of the world, and knows where it is, then it is easy to come up with a very efficient algorithm to clean every part of the room.  However when we removed this ability the results got quite a bit worse.  That being said the `Store Explored with Proximity' did very well on its own.  However, the realization of this robot may not be as realistic as we might hope.  Being able to store all the places where the robot has been could be difficult to implement outside of a simulation.
 
-The commercial product most known in this area is the `Roomba.'  The Roomba's algorithm[1] is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  I also believe that this algorithm performs better when measured in a non grid environment.  Given the spiral nature of the algorithm it was difficult to map that onto a grid without missing grid positions, or going over them more then once.  This robot has no knowledge of where it is or where it has been, it simply switches between two different algorithms based on whether it has hit a wall yet.
+The commercial product most known in this area is the `Roomba.'  The Roomba's algorithm\cite{HSW_Roomba} is similar to the `Proximity' one that we implemented.  We found that this algorithm is pretty inefficient,  However we were hard pressed to find a better one given the limited percepts.  I also believe that this algorithm performs better when measured in a non grid environment.  Given the spiral nature of the algorithm it was difficult to map that onto a grid without missing grid positions, or going over them more then once.  This robot has no knowledge of where it is or where it has been, it simply switches between two different algorithms based on whether it has hit a wall yet.
 
 There is still a lot of room in this field for better algorithms.  Since we have found that knowledge of the room makes a huge difference in finding an efficient path, perhaps a learning robot could be created.  One that uses the percepts it has to create a statistical probability of where it is in the room based on the given percepts.  We will leave this investigation to future projects. 
 
